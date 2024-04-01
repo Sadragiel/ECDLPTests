@@ -49,7 +49,8 @@ namespace WeierstrassCurveTest.DLP
 
             } while (j <= m - 1);
 
-            throw new Exception("No solution found.");
+            NotifyNoSolution();
+            return 0;
         }
     }
 }

@@ -20,5 +20,10 @@ namespace WeierstrassCurveTest.DLP
 
             return Q.Equals(expected);
         }
+
+        protected void NotifyNoSolution()
+        {
+            throw new Exception("No solution found.");
+        }
     }
 }

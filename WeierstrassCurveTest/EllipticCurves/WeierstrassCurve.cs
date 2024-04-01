@@ -100,6 +100,9 @@ namespace WeierstrassCurveTest.EllipticCurves
 
         public override Point Mult(Point A, BigInteger k)
         {
+            int sign = k.Sign;
+            k = BigInteger.Abs(k);
+
             // Double-and-add method of point multiplication
             bool[] factorBitsRepresentation = BigIntHelper.BigIntegerToBitsArray(k);
 
@@ -116,7 +119,7 @@ namespace WeierstrassCurveTest.EllipticCurves
                 temp = Double(temp);
             }
 
-            return res;
+            return sign == 1 ? res : Invert(res);
         }
 
         private Point CalculatePoint(BigInteger lambda, Point A, Point B)
