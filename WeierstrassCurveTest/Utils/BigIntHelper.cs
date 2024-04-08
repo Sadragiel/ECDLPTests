@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 
 namespace WeierstrassCurveTest.Utils
 {
@@ -44,6 +39,24 @@ namespace WeierstrassCurveTest.Utils
             return result;
         }
 
+        public static BigInteger Sqrt(BigInteger number)
+        {
+            if (number < 0) throw new ArgumentException("Square root of a negative number is undefined.");
+
+            if (number == 0) return 0;
+
+            BigInteger n = number / 2 + 1; // Initial guess
+            BigInteger n1 = (n + number / n) / 2;
+
+            while (n1 < n)
+            {
+                n = n1;
+                n1 = (n + number / n) / 2;
+            }
+
+            return n;
+        }
+
         public static BigInteger Random(BigInteger min, BigInteger max)
         {
             if (min >= max)
@@ -64,6 +77,46 @@ namespace WeierstrassCurveTest.Utils
             while (result < min || result >= max);
 
             return result;
+        }
+
+        public static List<BigInteger> Factorize(BigInteger n)
+        {
+            List<BigInteger> factors = new List<BigInteger>();
+            // Handle 2 separately to allow incrementing i by 2 later (for only odd numbers)
+            while (n % 2 == 0)
+            {
+                factors.Add(2);
+                n /= 2;
+            }
+
+            // Check odd numbers from 3 to sqrt(n)
+            BigInteger sqrt = Sqrt(n);
+            for (BigInteger i = 3; i <= sqrt; i += 2)
+            {
+                while (n % i == 0)
+                {
+                    factors.Add(i);
+                    n /= i;
+                }
+            }
+
+            // If n is a prime number greater than 2
+            if (n > 2)
+            {
+                factors.Add(n);
+            }
+
+            return factors;
+        }
+
+        public static int MapHashCodeToInterval(int hashCode, int a, int b)
+        {
+            // TODO: move this method somewhere else
+            long positiveHashCode = hashCode == int.MinValue ? (long)int.MaxValue + 1 : Math.Abs(hashCode);
+
+            int scaledHashCode = (int)(a + (positiveHashCode % (b - a + 1)));
+
+            return scaledHashCode;
         }
 
     }

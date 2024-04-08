@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+﻿using System.Numerics;
 using WeierstrassCurveTest.Types;
 using WeierstrassCurveTest.Utils;
 
@@ -48,6 +41,17 @@ namespace WeierstrassCurveTest.EllipticCurves
                     // for generated x there is no valid value of y
                 }
             }
+        }
+
+        public override BigInteger GetPointOrder(Point A)
+        {
+            Point multiple = A;
+            BigInteger order;
+            for (order = BigInteger.One; order <= this.order && !multiple.atInfinity; order++)
+            {
+                multiple = Add(multiple, A);
+            }
+            return order;
         }
 
         public override Point Add(Point A, Point B)

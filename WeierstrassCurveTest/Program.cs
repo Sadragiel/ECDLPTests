@@ -17,18 +17,21 @@ EllipticCurve ecc1 = new WeierstrassCurve(
 
 DLPMethod bsgs = new BSGS(ecc1);
 DLPMethod grumpyGiants = new GrumpyGiants(ecc1);
+DLPMethod kangaroo = new Kangaroo(ecc1);
 
 Point point1 = ecc1.GetRandomPoint();
 BigInteger expectedK = BigIntHelper.Random(1, ecc1.Order());
 Point point2 = ecc1.Mult(point1, expectedK);
+BigInteger point1Order = ecc1.GetPointOrder(point1);
+expectedK %= point1Order;
 
-Console.WriteLine($"Input: P {point1} and Q {point2}; expected k = {expectedK}");
-
+Console.WriteLine($"Input: P {point1} (of order {point1Order}) and Q {point2}; expected k = {expectedK}");
 
 try
 {
     BigInteger factorBsgs = TestMethod(bsgs, point1, point2);
     BigInteger factorGrumpy = TestMethod(grumpyGiants, point1, point2);
+    BigInteger factorKangaroo = TestMethod(kangaroo, point1, point2);
 }
 catch (Exception e)
 {
@@ -37,7 +40,8 @@ catch (Exception e)
 
 BigInteger TestMethod(DLPMethod method, Point pointA, Point pointQ)
 {
-    BigInteger factor = method.Solve(pointA, pointQ);
+    BigInteger factor = ModuloHelper.Abs(method.Solve(pointA, pointQ), point1Order);
+
 
     Console.WriteLine($"For points P {pointA} and Q {pointQ} the solution of DLP is Q = {factor} * P");
     if (bsgs.Test(pointA, pointQ, factor))

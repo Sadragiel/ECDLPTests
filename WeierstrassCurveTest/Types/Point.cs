@@ -5,7 +5,7 @@ namespace WeierstrassCurveTest.Types
     internal class Point
     {
         public BigInteger x, y;
-        public bool atInfinity;
+        public bool atInfinity = false;
 
         public Point(BigInteger x, BigInteger y)
         {
@@ -19,6 +19,11 @@ namespace WeierstrassCurveTest.Types
 
         static public Point getPointAtInfinity() {
             return new Point();
+        }
+
+        public override int GetHashCode()
+        {
+            return atInfinity ? atInfinity.GetHashCode() : HashCode.Combine(x.GetHashCode(), y.GetHashCode(), atInfinity.GetHashCode());
         }
 
         public override bool Equals(object? obj)

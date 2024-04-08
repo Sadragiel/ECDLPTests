@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 using WeierstrassCurveTest.Types;
 
 namespace WeierstrassCurveTest.EllipticCurves
@@ -19,6 +14,8 @@ namespace WeierstrassCurveTest.EllipticCurves
         public abstract bool TestPoint(Point A);
 
         public abstract Point GetRandomPoint();
+
+        public abstract BigInteger GetPointOrder(Point A);
 
         public abstract Point Add(Point A, Point B);
 
