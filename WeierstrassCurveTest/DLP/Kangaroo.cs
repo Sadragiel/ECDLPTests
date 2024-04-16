@@ -19,13 +19,13 @@ namespace WeierstrassCurveTest.DLP
             // epsilon is needed for adjusting the number of steps done by each kangaroo
             // epsilon - sqrt(b - a)
             int epsilon = (int)Math.Ceiling(Math.Sqrt((double)(b - a)));
-            
+
             // Steps map
             Dictionary<int, int> stepsMap = new Dictionary<int, int>();
 
             // Tame Kangaroo
             Point tameKangaroo = curve.Mult(P, b);
-            List <Tuple <Point, int>> tameKangarooPath = GetTameKangarooPath(P, stepsMap, a, b, epsilon);
+            List<Tuple<Point, int>> tameKangarooPath = GetTameKangarooPath(P, stepsMap, a, b, epsilon);
 
             // Wild kangaroo
             int maxWildKangarooSteps = (int)Math.Ceiling(2.7 * epsilon);
@@ -48,7 +48,7 @@ namespace WeierstrassCurveTest.DLP
 
                     // Checking for the trap
                     var collision = tameKangarooPath.Find((Tuple<Point, int> item) => item.Item1.Equals(wildKangaroo));
-                    
+
                     if (collision != null)
                     {
                         return collision.Item2 - wildKangarooDistance;

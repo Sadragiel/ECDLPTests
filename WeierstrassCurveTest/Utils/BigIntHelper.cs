@@ -79,6 +79,23 @@ namespace WeierstrassCurveTest.Utils
             return result;
         }
 
+        public static BigInteger GCD(BigInteger a, BigInteger b, out BigInteger x, out BigInteger y)
+        {
+            if (b == 0)
+            {
+                x = 1;
+                y = 0;
+                return a;
+            }
+
+            BigInteger gcd = GCD(b, a % b, out BigInteger x1, out BigInteger y1);
+
+            x = y1;
+            y = x1 - (a / b) * y1;
+
+            return gcd;
+        }
+
         public static List<BigInteger> Factorize(BigInteger n)
         {
             List<BigInteger> factors = new List<BigInteger>();

@@ -18,6 +18,7 @@ EllipticCurve ecc1 = new WeierstrassCurve(
 DLPMethod bsgs = new BSGS(ecc1);
 DLPMethod grumpyGiants = new GrumpyGiants(ecc1);
 DLPMethod kangaroo = new Kangaroo(ecc1);
+DLPMethod rho = new PollardRho(ecc1);
 
 Point point1 = ecc1.GetRandomPoint();
 BigInteger expectedK = BigIntHelper.Random(1, ecc1.Order());
@@ -29,21 +30,22 @@ Console.WriteLine($"Input: P {point1} (of order {point1Order}) and Q {point2}; e
 
 try
 {
-    BigInteger factorBsgs = TestMethod(bsgs, point1, point2);
-    BigInteger factorGrumpy = TestMethod(grumpyGiants, point1, point2);
-    BigInteger factorKangaroo = TestMethod(kangaroo, point1, point2);
+    BigInteger factorBsgs = TestMethod("BSGS", bsgs, point1, point2);
+    BigInteger factorGrumpy = TestMethod("GrumpyGiants", grumpyGiants, point1, point2);
+    BigInteger factorKangaroo = TestMethod("Kangaroo", kangaroo, point1, point2);
+    BigInteger factorRho = TestMethod("PollardRho", rho, point1, point2);
 }
 catch (Exception e)
 {
     Console.WriteLine($"For points P {point1} and Q {point2} the solution cannot be found =(");
 }
 
-BigInteger TestMethod(DLPMethod method, Point pointA, Point pointQ)
+BigInteger TestMethod(string methodName, DLPMethod method, Point pointA, Point pointQ)
 {
     BigInteger factor = ModuloHelper.Abs(method.Solve(pointA, pointQ), point1Order);
 
 
-    Console.WriteLine($"For points P {pointA} and Q {pointQ} the solution of DLP is Q = {factor} * P");
+    Console.WriteLine($"Method {methodName}: For points P {pointA} and Q {pointQ} the solution of DLP is Q = {factor} * P");
     if (bsgs.Test(pointA, pointQ, factor))
         Console.WriteLine("It is correct!");
     else
