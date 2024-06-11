@@ -1,18 +1,24 @@
 ﻿using System.Numerics;
 using WeierstrassCurveTest.EllipticCurves;
 using WeierstrassCurveTest.Types;
+using WeierstrassCurveTest.Utils;
 
 namespace WeierstrassCurveTest.DLP
 {
     internal class GrumpyGiants : DLPMethod
     {
-        public GrumpyGiants(EllipticCurve curve) : base(curve) { }
+        BigInteger multInvToTwo;
+
+        public GrumpyGiants(EllipticCurve curve) : base(curve)
+        {
+            multInvToTwo = ModuloHelper.MultInverse(2, curve.Order());
+        }
 
         public override BigInteger Solve(Point P, Point Q)
         {
             // Params
             BigInteger N = curve.Order();
-            int n = 1;
+            int n = 2;
             int m = (int)Math.Ceiling(Math.Sqrt((double)N / 2.0));
 
             // Baby Steps: { P + inP }
@@ -28,7 +34,7 @@ namespace WeierstrassCurveTest.DLP
             Point giant2Step = curve.Invert(curve.Mult(P, m + 1));
 
             // Iteration process
-            for (int i = 1; i <= m; i++)
+            for (int i = 1; i <= m + n; i++)
             {
                 Point newBaby = curve.Add(babySteps.Last(), babyStep);
                 Point newGiant1 = curve.Add(giant1Steps.Last(), giant1Step);
@@ -46,10 +52,10 @@ namespace WeierstrassCurveTest.DLP
                 }
 
                 j = giant2Steps.IndexOf(newBaby);
-                // k = (1 + in - jm -j) / 2
+                // k = (1 + in + jm + j) * MultInv(2, N)
                 if (j != -1)
                 {
-                    return (1 + i * n - j * m - j) / 2;
+                    return (1 + i * n + j * m + j) * multInvToTwo;
                 }
 
                 j = babySteps.IndexOf(newGiant1);
@@ -67,10 +73,10 @@ namespace WeierstrassCurveTest.DLP
                 }
 
                 j = babySteps.IndexOf(newGiant2);
-                // k = (1 + jn - im -i) / 2
+                // k = (1 + jn + im + i) * MultInv(2, N)
                 if (j != -1)
                 {
-                    return (1 + j * n - i * m - i) / 2;
+                    return (1 + j * n + i * m + i) * multInvToTwo;
                 }
 
                 j = giant1Steps.IndexOf(newGiant2);

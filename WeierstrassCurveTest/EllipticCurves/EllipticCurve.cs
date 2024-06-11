@@ -10,7 +10,7 @@ namespace WeierstrassCurveTest.EllipticCurves
         protected EllipticCurve() { }
 
         public BigInteger Order() { return order; }
-
+        
         public abstract bool TestPoint(Point A);
 
         public abstract Point GetRandomPoint();

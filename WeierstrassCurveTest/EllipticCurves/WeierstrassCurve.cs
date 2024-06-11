@@ -11,8 +11,8 @@ namespace WeierstrassCurveTest.EllipticCurves
         private BigInteger p;
 
         public WeierstrassCurve(BigInteger a, BigInteger b, BigInteger p, BigInteger order) { 
-            this.a = a;
-            this.b = b;
+            this.a = ModuloHelper.Abs(a, p);
+            this.b = ModuloHelper.Abs(b, p);
             this.p = p;
             this.order = order;
         }
@@ -47,10 +47,11 @@ namespace WeierstrassCurveTest.EllipticCurves
         {
             Point multiple = A;
             BigInteger order;
-            for (order = BigInteger.One; order <= this.order && !multiple.atInfinity; order++)
+            for (order = BigInteger.One; order < this.order && !multiple.atInfinity; order++)
             {
                 multiple = Add(multiple, A);
             }
+            // TODO: throw an error if order of the curve is not dividible by the order of point
             return order;
         }
 

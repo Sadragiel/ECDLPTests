@@ -18,14 +18,18 @@ namespace WeierstrassCurveTest.DLP
         public PollardRho(EllipticCurve curve) : base(curve)
         {
             argumentsList = new ArgumentsList();
-            for (int i = 0; i < numberOfSubgroups; i++)
+
+            // argumentsList[numberOfSubgroups] is the pair of arguments of a startign point P0
+            for (int i = 0; i <= numberOfSubgroups; i++)
             {
-                argumentsList.Add(
-                    new Tuple<BigInteger, BigInteger>(
-                        GetRandomArgument(),
-                        GetRandomArgument()
-                    )
-                );
+                BigInteger a, b;
+                do
+                {
+                    a = GetRandomArgument();
+                    b = GetRandomArgument();
+                } while (argumentsList.FindIndex((tuple) => tuple.Item1 == a && tuple.Item2 == b) != -1);
+
+                argumentsList.Add(new Tuple<BigInteger, BigInteger>(a, b));
             }
         }
 
@@ -35,7 +39,7 @@ namespace WeierstrassCurveTest.DLP
             // arguments ai and bi:
 
 
-            Triplet activeTriplet = null;
+            Triplet activeTriplet;
             Triplet testedForCollisionTriplet = null;
 
             for (int i = 1; true; i *= 2)
@@ -56,9 +60,9 @@ namespace WeierstrassCurveTest.DLP
                         BigInteger vi = activeTriplet.Item3;
                         BigInteger uj = testedForCollisionTriplet.Item2;
                         BigInteger vj = testedForCollisionTriplet.Item3;
+                        BigInteger gcd = BigIntHelper.GCD(N, BigInteger.Abs(vj - vi), out _, out _);
 
-                        BigInteger modulo = N / BigIntHelper.GCD(N, BigInteger.Abs(vj - vi), out _, out _);
-
+                        BigInteger modulo = N / gcd;
                         return ModuloHelper.Abs((ui - uj) * ModuloHelper.MultInverse(vj - vi, modulo), modulo);
                     }
                 }
@@ -72,8 +76,7 @@ namespace WeierstrassCurveTest.DLP
             // starting point P0 = a0 * P + b0 * Q
             if (activeTriplet == null)
             {
-                BigInteger a0 = GetRandomArgument();
-                BigInteger b0 = GetRandomArgument();
+                (BigInteger a0, BigInteger b0) = argumentsList[numberOfSubgroups];
                 Point P0 = curve.Add(curve.Mult(P, a0), curve.Mult(Q, b0));
                 return new Triplet(P0, a0, b0);
             }

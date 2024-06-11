@@ -126,6 +126,29 @@ namespace WeierstrassCurveTest.Utils
             return factors;
         }
 
+        public static long LogBase2(BigInteger value)
+        {
+            if (value <= 0)
+                throw new ArgumentOutOfRangeException("value", "Value must be positive.");
+
+            // BitLength returns the number of bits required to represent the number in binary.
+            // The logarithm base 2 is the highest position of a set bit, as the bit length minus one.
+            return value.GetBitLength() - 1;
+        }
+
+        public static BigInteger Combination(BigInteger n, BigInteger k)
+        {
+            if (k > n) return 0;
+            if (k > n - k) k = n - k; // Take advantage of symmetry, C(n, k) == C(n, n-k)
+
+            BigInteger result = 1;
+            for (int i = 1; i <= k; i++)
+            {
+                result = result * (n - i + 1) / i;
+            }
+            return result;
+        }
+
         public static int MapHashCodeToInterval(int hashCode, int a, int b)
         {
             // TODO: move this method somewhere else
