@@ -122,7 +122,7 @@ namespace WeierstrassCurveTest.DLP
                                 continue;
                             }
 
-                            BigInteger monomialValue = ModuloHelper.Abs(BigIntHelper.Pow(x, xIndex) * BigIntHelper.Pow(y, yIndex) * BigIntHelper.Pow(z, zIndex), mod);
+                            BigInteger monomialValue = ModuloHelper.Abs(BigInteger.ModPow(x, xIndex, mod) * BigInteger.ModPow(y, yIndex, mod) * BigInteger.ModPow(z, zIndex, mod), mod);
 
                             row.Add(monomialValue);
                         }

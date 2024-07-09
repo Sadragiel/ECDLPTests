@@ -8,7 +8,6 @@ namespace WeierstrassCurveTest.EllipticCurves
     {
         private BigInteger a;
         private BigInteger b;
-        private BigInteger p;
 
         public WeierstrassCurve(BigInteger a, BigInteger b, BigInteger p, BigInteger order) { 
             this.a = ModuloHelper.Abs(a, p);
@@ -41,18 +40,6 @@ namespace WeierstrassCurveTest.EllipticCurves
                     // for generated x there is no valid value of y
                 }
             }
-        }
-
-        public override BigInteger GetPointOrder(Point A)
-        {
-            Point multiple = A;
-            BigInteger order;
-            for (order = BigInteger.One; order < this.order && !multiple.atInfinity; order++)
-            {
-                multiple = Add(multiple, A);
-            }
-            // TODO: throw an error if order of the curve is not dividible by the order of point
-            return order;
         }
 
         public override Point Add(Point A, Point B)
@@ -96,35 +83,6 @@ namespace WeierstrassCurveTest.EllipticCurves
             BigInteger lambda = ModuloHelper.Abs((3 * BigInteger.ModPow(A.x, 2, p) + this.a) * ModuloHelper.MultInverse(2 * A.y, p), p);
 
             return CalculatePoint(lambda, A, A);
-        }
-
-        public override Point Invert(Point A)
-        {
-            return new Point(A.x, ModuloHelper.AddInverse(A.y, p));
-        }
-
-        public override Point Mult(Point A, BigInteger k)
-        {
-            int sign = k.Sign;
-            k = BigInteger.Abs(k);
-
-            // Double-and-add method of point multiplication
-            bool[] factorBitsRepresentation = BigIntHelper.BigIntegerToBitsArray(k);
-
-            Point res = Point.getPointAtInfinity();
-            Point temp = A;
-
-            foreach (bool b in factorBitsRepresentation)
-            {
-                if (b)
-                {
-                    res = Add(res, temp);
-                }
-
-                temp = Double(temp);
-            }
-
-            return sign == 1 ? res : Invert(res);
         }
 
         private Point CalculatePoint(BigInteger lambda, Point A, Point B)

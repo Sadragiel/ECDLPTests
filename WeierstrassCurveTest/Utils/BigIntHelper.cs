@@ -22,23 +22,6 @@ namespace WeierstrassCurveTest.Utils
             return bitsList.ToArray();
         }
 
-        public static BigInteger Pow(BigInteger baseNumber, BigInteger exponent)
-        {
-            if (exponent == 0) return 1; 
-            if (exponent == 1) return baseNumber;
-
-            BigInteger result = 1;
-            while (exponent > 0)
-            {
-                if (exponent % 2 == 1)
-                    result *= baseNumber;
-                exponent /= 2;
-                baseNumber *= baseNumber;
-            }
-
-            return result;
-        }
-
         public static BigInteger Sqrt(BigInteger number)
         {
             if (number < 0) throw new ArgumentException("Square root of a negative number is undefined.");
