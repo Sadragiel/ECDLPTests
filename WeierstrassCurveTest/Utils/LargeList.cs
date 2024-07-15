@@ -119,5 +119,10 @@ namespace WeierstrassCurveTest.Utils
             }
             chunks[chunks.Count - 1].Add(item);
         }
+
+        public override string ToString()
+        {
+            return string.Join(", ", chunks.Select(sublist => string.Join(", ", sublist)).ToList());
+        }
     }
 }

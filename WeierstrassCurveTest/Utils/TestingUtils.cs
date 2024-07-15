@@ -80,7 +80,7 @@ namespace WeierstrassCurveTest.Utils
             DLPMethod grumpyGiants = new GrumpyGiants(curve);
             DLPMethod kangaroo = new Kangaroo(curve);
             DLPMethod rho = new PollardRho(curve);
-            //DLPMethod lasvegas = new LasVegasc(curve);
+            DLPMethod lasvegas = new LasVegasc(curve);
 
             Point point1 = curve.GetRandomPoint();
             BigInteger point1Order = curve.GetPointOrder(point1);
@@ -89,7 +89,7 @@ namespace WeierstrassCurveTest.Utils
             DLPTestData data = new DLPTestData(curve);
 
             Console.WriteLine($"Input: P {data.P} (of order {data.orderP}) and Q {data.Q}. Expected k={data.expectedK}");
-            Console.WriteLine($"point * its order - {curve.Mult(data.P, data.orderP)}");
+            Console.WriteLine($"Order of P - {data.orderP}. Test P * ordP = {curve.Mult(data.P, data.orderP)}");
 
             try
             {
@@ -97,7 +97,7 @@ namespace WeierstrassCurveTest.Utils
                 BigInteger factorGrumpy = TestMethod(grumpyGiants, data);
                 BigInteger factorKangaroo = TestMethod(kangaroo, data);
                 BigInteger factorRho = TestMethod(rho, data);
-                //BigInteger factorLasVegas = TestMethod(lasvegas, data);
+                BigInteger factorLasVegas = TestMethod(lasvegas, data);
             }
             catch (Exception e)
             {

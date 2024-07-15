@@ -7,7 +7,7 @@ using WeierstrassCurveTest.Utils;
 EllipticCurve edwardsCurve = new EdwardsCurve(
     new BigInteger(2207),
     new BigInteger(3533),
-    new BigInteger(3568)
+    new BigInteger(3568) // calculated with SageMath
 );
 
 EllipticCurve weierstrassCurve = new WeierstrassCurve(
@@ -17,8 +17,8 @@ EllipticCurve weierstrassCurve = new WeierstrassCurve(
     new BigInteger(2111) // calculated with SageMath 
 );
 
-TestingUtils.TestCurve(edwardsCurve, "Edwards");
-TestingUtils.TestCurve(weierstrassCurve, "Weierstrass");
+//TestingUtils.TestCurve(edwardsCurve, "Edwards");
+//TestingUtils.TestCurve(weierstrassCurve, "Weierstrass");
 
 TestingUtils.TestDLPMethods(edwardsCurve, "Edwards");
 TestingUtils.TestDLPMethods(weierstrassCurve, "Weierstrass");

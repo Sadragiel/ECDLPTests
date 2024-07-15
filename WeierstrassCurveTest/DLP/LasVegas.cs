@@ -11,15 +11,19 @@ namespace WeierstrassCurveTest.DLP
         long l;
         LargeList<LargeList<BigInteger>> matrix;
         BigInteger mod;
+        BigInteger ord;
 
-        int maxNumberOfAttepts = 10;
+        int maxNumberOfAttepts = 100;
 
         public LasVegasc(EllipticCurve curve) : base(curve)
         {
-            mod = curve.Order();
+            // Modulo is used for operations within field, such as managin matrix
+            mod = curve.Modulo(); 
+            // Order is used for operations on the curve, such as calculating random points
+            ord = curve.Order();
 
             // Select n' - sum of max degrees of monomials of curve C
-            n_ = BigIntHelper.LogBase2(curve.Order());
+            n_ = BigIntHelper.LogBase2(mod);
 
             // l = 3n'
             l = 3 * n_;
@@ -31,6 +35,7 @@ namespace WeierstrassCurveTest.DLP
             LargeList<BigInteger> pCoefs = null;
             LargeList<BigInteger> qCoefs = null;
             int attempt = 0;
+
             while (attempt++ < maxNumberOfAttepts && v == null)
             {
                 // matrix should have rows made out of x^i*y^j*z^k such that i+j+k = n'
@@ -50,13 +55,9 @@ namespace WeierstrassCurveTest.DLP
             }
 
 
-            if (v != null)
+            if (v == null)
             {
-                Console.WriteLine($"V (vector with l({l}) zeros): {string.Join(", ", v)}, after {attempt - 1}-th attempt");
-            }
-            else
-            {
-                Console.WriteLine($"V is not found in {attempt} attempt");
+                Console.WriteLine($"Problem L is not solved in {attempt} attempt");
                 NotifyNoSolution();
                 return 0;
             }
@@ -67,7 +68,7 @@ namespace WeierstrassCurveTest.DLP
             {
                 if (v[i] != 0)
                 {
-                    a = ModuloHelper.Abs(a + pCoefs[i], mod);
+                    a = ModuloHelper.Abs(a + pCoefs[i], ord);
                 }
             }
 
@@ -76,11 +77,11 @@ namespace WeierstrassCurveTest.DLP
             {
                 if (v[i] != 0)
                 {
-                    b = ModuloHelper.Abs(a + qCoefs[i - l + 1], mod);
+                    b = ModuloHelper.Abs(b + qCoefs[i - l + 1], ord);
                 }
             }
 
-            return ModuloHelper.Abs(a * ModuloHelper.MultInverse(b, mod), mod);
+            return ModuloHelper.Abs(a * ModuloHelper.MultInverse(b, ord), ord);
         }
 
         LargeList<BigInteger> FillTheMatrix(long numOfRowsFilled, Func<BigInteger, Point> getNewPoint)
@@ -91,7 +92,7 @@ namespace WeierstrassCurveTest.DLP
                 // generate new unique random number
                 do
                 {
-                    BigInteger newNumber = BigIntHelper.Random(1, curve.Order());
+                    BigInteger newNumber = BigIntHelper.Random(1, ord);
                     long index = generatedRandomNumbers.FindIndex(x => x == newNumber);
 
                     if (index < 0)
@@ -141,6 +142,5 @@ namespace WeierstrassCurveTest.DLP
                 return row.Count(value => value == 0) == l;
             });
         }
-
     }
 }
