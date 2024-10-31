@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 using WeierstrassCurveTest.EllipticCurves;
 using WeierstrassCurveTest.Types;
+using WeierstrassCurveTest.Utils;
 
 namespace WeierstrassCurveTest.DLP
 {
@@ -40,7 +36,7 @@ namespace WeierstrassCurveTest.DLP
                 {
                     // k = i + jm (mod N)
 
-                    return (i + j * m) % N;
+                    return ModuloHelper.Abs((i + j * m), N);
                 }
 
                 // Giant takes a step

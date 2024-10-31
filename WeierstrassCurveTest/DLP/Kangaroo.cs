@@ -1,34 +1,42 @@
 ﻿using System.Numerics;
+using System.Security.Cryptography;
 using WeierstrassCurveTest.EllipticCurves;
 using WeierstrassCurveTest.Types;
+using WeierstrassCurveTest.Utils;
 
+
+// WIP: Method is not working for large numbers
 namespace WeierstrassCurveTest.DLP
 {
     internal class Kangaroo : DLPMethod
     {
-        Random random = new Random();
+        BigInteger a;
+        BigInteger b;
+        BigInteger epsilon;
+        BigInteger hashModulo;
 
-        public Kangaroo(EllipticCurve curve) : base(curve) { }
+        int r = 50;
 
-        public override BigInteger Solve(Point P, Point Q)
-        {
+        public Kangaroo(EllipticCurve curve) : base(curve) {
             // k is in range [a ,b] = [1, curve.Order()]
-            int a = 1;
-            int b = (int)curve.Order();
+            a = 0;
+            b = curve.Order();
 
             // epsilon is needed for adjusting the number of steps done by each kangaroo
             // epsilon - sqrt(b - a)
-            int epsilon = (int)Math.Ceiling(Math.Sqrt((double)(b - a)));
+            epsilon = BigIntHelper.Sqrt((b - a));
 
-            // Steps map
-            Dictionary<int, int> stepsMap = new Dictionary<int, int>();
+            // hashModulo is needed to map all points to the step length
+            hashModulo = GetHashModulo();
+        }
 
+        public override BigInteger Solve(Point P, Point Q)
+        {
             // Tame Kangaroo
-            Point tameKangaroo = curve.Mult(P, b);
-            List<Tuple<Point, int>> tameKangarooPath = GetTameKangarooPath(P, stepsMap, a, b, epsilon);
+            List<Tuple<Point, BigInteger>> tameKangarooTraps = GetTameKangarooTrap(P, a, b, epsilon);
 
             // Wild kangaroo
-            int maxWildKangarooSteps = (int)Math.Ceiling(2.7 * epsilon);
+            BigInteger maxWildKangarooSteps = 27 * epsilon / 10;
             int incrementFactor = 2;
             Point wildKangarooStartingPoint = Q;
             Point startingPointIncrement = curve.Mult(P, incrementFactor);
@@ -36,24 +44,26 @@ namespace WeierstrassCurveTest.DLP
             for (int i = 0; i < b; i++)
             {
                 Point wildKangaroo = wildKangarooStartingPoint;
-                int wildKangarooDistance = incrementFactor * i;
+                BigInteger wildKangarooDistance = incrementFactor * i;
 
                 for (int j = 0; j < maxWildKangarooSteps; j++)
                 {
-                    int stepLength = getStepLength(wildKangaroo, stepsMap, a, epsilon);
+                    BigInteger stepLength = getStepLength(wildKangaroo, a, 2 * epsilon);
 
                     // Stepper function
                     wildKangaroo = curve.Add(wildKangaroo, curve.Mult(P, stepLength));
                     wildKangarooDistance += stepLength;
 
-                    // Checking for the trap
-                    var collision = tameKangarooPath.Find((Tuple<Point, int> item) => item.Item1.Equals(wildKangaroo));
+                    Tuple<Point, BigInteger> tameKangaroo = tameKangarooTraps.Find(tuple => tuple.Item1.Equals(wildKangaroo));
 
-                    if (collision != null)
+                    // Checking for the trap
+                    if (tameKangaroo != null)
                     {
-                        return collision.Item2 - wildKangarooDistance;
+                        return ModuloHelper.Abs(tameKangaroo.Item2 - wildKangarooDistance, curve.Order());
                     }
                 }
+
+                Console.WriteLine("Wild kangaroo has escaped!");
 
                 wildKangarooStartingPoint = curve.Add(wildKangarooStartingPoint, startingPointIncrement);
             }
@@ -62,40 +72,98 @@ namespace WeierstrassCurveTest.DLP
             return 0;
         }
 
-        private List<Tuple<Point, int>> GetTameKangarooPath(Point P, Dictionary<int, int> stepsMap, int a, int b, int epsilon)
+        private List<Tuple<Point, BigInteger>> GetTameKangarooTrap(Point P, BigInteger a, BigInteger b, BigInteger epsilon)
         {
             Point tameKangaroo = curve.Mult(P, b);
-            List<Tuple<Point, int>> tameKangarooPath = new List<Tuple<Point, int>>
-            {
-                new Tuple<Point, int>(tameKangaroo, b),
-            };
+            Tuple<Point, BigInteger> tameKangarooTrap = new Tuple<Point, BigInteger>(tameKangaroo, b);
 
-            int tameKangarooSteps = (int)Math.Ceiling(0.7 * epsilon);
-            for (int i = 0; i < tameKangarooSteps; i++)
+            List<Tuple<Point, BigInteger>> traps = new List<Tuple<Point, BigInteger>> { tameKangarooTrap };
+
+            BigInteger tameKangarooSteps = 7 * epsilon / 10;
+            Console.WriteLine($"tameKangarooSteps = {tameKangarooSteps}");
+
+            BigInteger distanceBetweenTraps = 1;
+            BigInteger stepsFromLastTrap = 0;
+
+            for (BigInteger i = 0; i < tameKangarooSteps; i++)
             {
-                int stepLength = getStepLength(tameKangaroo, stepsMap, a, epsilon);
+                stepsFromLastTrap++;
+
+                BigInteger stepLength = getStepLength(tameKangaroo, a, 2 * epsilon);
 
                 // Stepper function
                 tameKangaroo = curve.Add(tameKangaroo, curve.Mult(P, stepLength));
 
                 // set up "traps" keeping the distance
-                int distance = stepLength + tameKangarooPath.Last().Item2;
-                tameKangarooPath.Add(new Tuple<Point, int>(tameKangaroo, distance));
+                BigInteger distance = stepLength + tameKangarooTrap.Item2;
+                tameKangarooTrap = new Tuple<Point, BigInteger>(tameKangaroo, distance);
+
+                if (stepsFromLastTrap == distanceBetweenTraps)
+                {
+                    stepsFromLastTrap = 0;
+                    traps.Add(tameKangarooTrap);
+                }
             }
 
-            return tameKangarooPath;
+            return traps;
         }
 
-        private int getStepLength(Point kangarooPosition, Dictionary<int, int> stepsMap, int min, int max)
+        private BigInteger getStepLength(Point kangarooPosition, BigInteger minStep, BigInteger maxStep)
         {
-            int previousPointHash = kangarooPosition.GetHashCode();
-            if (!stepsMap.ContainsKey(previousPointHash))
+            //int previousPointHash = kangarooPosition.GetHashCode() % r;
+            //if (!stepsMap.ContainsKey(previousPointHash))
+            //{
+            //    BigInteger step = BigIntHelper.Random(min, max);
+            //    stepsMap[previousPointHash] = step;
+            //}
+
+            //return stepsMap[previousPointHash];
+
+            if (kangarooPosition.atInfinity)
             {
-                int step = random.Next(min, max);
-                stepsMap[previousPointHash] = step;
+                return minStep; // Or any other predefined step length you prefer
             }
 
-            return stepsMap[previousPointHash];
+            return minStep + ((kangarooPosition.x) % hashModulo);
+
+            //byte[] combinedBytes = (kangarooPosition.x + kangarooPosition.y).ToByteArray();
+            ////byte[] yBytes = kangarooPosition.y.ToByteArray();
+
+            ////byte[] combinedBytes = new byte[xBytes.Length + yBytes.Length];
+            ////Buffer.BlockCopy(xBytes, 0, combinedBytes, 0, xBytes.Length);
+            ////Buffer.BlockCopy(yBytes, 0, combinedBytes, xBytes.Length, yBytes.Length);
+
+            //using (SHA256 sha256 = SHA256.Create())
+            //{
+            //    byte[] hashBytes = sha256.ComputeHash(combinedBytes);
+            //    BigInteger hashValue = BigInteger.Abs(new BigInteger(hashBytes));
+
+            //    BigInteger range = maxStep - minStep + 1;
+
+            //    BigInteger stepLength = minStep + (hashValue % range);
+
+            //    return stepLength;
+            //}
+        }
+
+        private int GetHashModulo()
+        {
+            BigInteger sumStepLength = 0;
+
+            for (int i = 1; i < 256; i++)
+            {
+                sumStepLength += BigInteger.Pow(2,  (i - 1));
+
+                BigInteger currentMeanStepSize = sumStepLength / i;
+                BigInteger nextMeanStepSize = (sumStepLength + BigInteger.Pow(2, i)) / i;
+
+                if (epsilon - currentMeanStepSize <= nextMeanStepSize  - epsilon)
+                {
+                    return i;
+                }
+            }
+
+            return 256;
         }
     }
 }

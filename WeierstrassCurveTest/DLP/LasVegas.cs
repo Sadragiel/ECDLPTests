@@ -5,15 +5,16 @@ using WeierstrassCurveTest.Utils;
 
 namespace WeierstrassCurveTest.DLP
 {
+    // WIP: Method is not working for large numbers
     internal class LasVegasc : DLPMethod
     {
-        long n_;
-        long l;
-        LargeList<LargeList<BigInteger>> matrix;
+        int n_;
+        int l;
+        List<List<BigInteger>> matrix;
         BigInteger mod;
         BigInteger ord;
 
-        int maxNumberOfAttepts = 100;
+        int maxNumberOfAttepts = 10;
 
         public LasVegasc(EllipticCurve curve) : base(curve)
         {
@@ -23,7 +24,7 @@ namespace WeierstrassCurveTest.DLP
             ord = curve.Order();
 
             // Select n' - sum of max degrees of monomials of curve C
-            n_ = BigIntHelper.LogBase2(mod);
+            n_ = BigIntHelper.LogBase2(ord);
 
             // l = 3n'
             l = 3 * n_;
@@ -31,24 +32,24 @@ namespace WeierstrassCurveTest.DLP
 
         public override BigInteger Solve(Point P, Point Q)
         {
-            LargeList<BigInteger> v = null;
-            LargeList<BigInteger> pCoefs = null;
-            LargeList<BigInteger> qCoefs = null;
+            List<BigInteger> v = null;
+            List<BigInteger> pCoefs = null;
+            List<BigInteger> qCoefs = null;
             int attempt = 0;
 
-            while (attempt++ < maxNumberOfAttepts && v == null)
+            while (++attempt < maxNumberOfAttepts && v == null)
             {
                 // matrix should have rows made out of x^i*y^j*z^k such that i+j+k = n'
                 // and also, the order of i, j and k should be fixed
-                matrix = new LargeList<LargeList<BigInteger>>(); // resetting matrix on every attempt
+                matrix = new List<List<BigInteger>>(); // resetting matrix on every attempt
 
-                pCoefs = FillTheMatrix(l - 1, (BigInteger num) => curve.Mult(P, num));
+                pCoefs = FillTheMatrix(3 * n_ - 1, (BigInteger num) => curve.Mult(P, num));
                 qCoefs = FillTheMatrix(l + 1, (BigInteger num) => curve.Invert(curve.Mult(Q, num)));
                 
                 // Extracting left kernel
-                LargeList<LargeList<BigInteger>> transposed = MatrixHelper.TransposeMatrix(matrix);
+                List<List<BigInteger>> transposed = MatrixHelper.TransposeMatrix(matrix);
                 MatrixHelper.RowReduce(transposed, mod);
-                LargeList<LargeList<BigInteger>> leftKernel = MatrixHelper.FindKernelBasis(transposed, mod);
+                List<List<BigInteger>> leftKernel = MatrixHelper.FindKernelBasis(transposed, mod);
 
                 // Problem L - in left kernel find a vector with l zeros
                 v = GetRowWithLZeros(leftKernel);
@@ -57,14 +58,17 @@ namespace WeierstrassCurveTest.DLP
 
             if (v == null)
             {
-                Console.WriteLine($"Problem L is not solved in {attempt} attempt");
+                Console.WriteLine($"Failure: Problem L is not solved in {attempt} attempt");
                 NotifyNoSolution();
                 return 0;
+            } else
+            {
+                Console.WriteLine($"Success: Problem L is solved in {attempt} attempt");
             }
 
 
             BigInteger a = 0;
-            for (long i = 0; i < l - 1; i++)
+            for (int i = 0; i < l - 1; i++)
             {
                 if (v[i] != 0)
                 {
@@ -73,7 +77,7 @@ namespace WeierstrassCurveTest.DLP
             }
 
             BigInteger b = 0;
-            for (long i = l - 1; i < 2 * l; i++)
+            for (int i = l - 1; i < 2 * l; i++)
             {
                 if (v[i] != 0)
                 {
@@ -84,9 +88,9 @@ namespace WeierstrassCurveTest.DLP
             return ModuloHelper.Abs(a * ModuloHelper.MultInverse(b, ord), ord);
         }
 
-        LargeList<BigInteger> FillTheMatrix(long numOfRowsFilled, Func<BigInteger, Point> getNewPoint)
+        List<BigInteger> FillTheMatrix(long numOfRowsFilled, Func<BigInteger, Point> getNewPoint)
         {
-            LargeList<BigInteger> generatedRandomNumbers = new LargeList<BigInteger>(); 
+            List<BigInteger> generatedRandomNumbers = new List<BigInteger>(); 
             for (int i = 0; i < numOfRowsFilled; i++)
             {
                 // generate new unique random number
@@ -108,7 +112,7 @@ namespace WeierstrassCurveTest.DLP
                 BigInteger y = point.y;
                 BigInteger z = 1; // In projective space we set z to 1
 
-                LargeList<BigInteger> row = new LargeList<BigInteger>();
+                List<BigInteger> row = new List<BigInteger>();
 
                 // calculating monomials
                 for (long zIndex = 0; zIndex <= n_; zIndex++)
@@ -135,11 +139,11 @@ namespace WeierstrassCurveTest.DLP
             return generatedRandomNumbers;
         }
 
-        LargeList<BigInteger>? GetRowWithLZeros(LargeList<LargeList<BigInteger>> matrix)
+        List<BigInteger>? GetRowWithLZeros(List<List<BigInteger>> matrix)
         {
-            return matrix.Find((LargeList<BigInteger> row) =>
+            return matrix.Find((List<BigInteger> row) =>
             {
-                return row.Count(value => value == 0) == l;
+                return row.Count(value => value == 0) >= l;
             });
         }
     }

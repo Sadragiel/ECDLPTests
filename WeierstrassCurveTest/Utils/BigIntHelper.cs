@@ -109,14 +109,15 @@ namespace WeierstrassCurveTest.Utils
             return factors;
         }
 
-        public static long LogBase2(BigInteger value)
+        public static int LogBase2(BigInteger value)
         {
             if (value <= 0)
                 throw new ArgumentOutOfRangeException("value", "Value must be positive.");
 
             // BitLength returns the number of bits required to represent the number in binary.
             // The logarithm base 2 is the highest position of a set bit, as the bit length minus one.
-            return value.GetBitLength() - 1;
+            // We assume that value is small enough to use int
+            return (int)value.GetBitLength() - 1;
         }
 
         public static BigInteger Combination(BigInteger n, BigInteger k)

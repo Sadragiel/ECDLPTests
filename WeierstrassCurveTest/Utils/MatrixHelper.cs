@@ -4,15 +4,15 @@ namespace WeierstrassCurveTest.Utils
 {
     internal static class MatrixHelper
     {
-        public static LargeList<LargeList<BigInteger>> TransposeMatrix(LargeList<LargeList<BigInteger>> matrix)
+        public static List<List<BigInteger>> TransposeMatrix(List<List<BigInteger>> matrix)
         {
             long rows = matrix.Count;
             long cols = matrix[0].Count;
-            var transpose = new LargeList<LargeList<BigInteger>>();
+            var transpose = new List<List<BigInteger>>();
 
             for (int i = 0; i < cols; i++)
             {
-                var newRow = new LargeList<BigInteger>();
+                var newRow = new List<BigInteger>();
                 for (int j = 0; j < rows; j++)
                 {
                     newRow.Add(matrix[j][i]);
@@ -22,7 +22,7 @@ namespace WeierstrassCurveTest.Utils
             return transpose;
         }
 
-        public static void RowReduce(LargeList<LargeList<BigInteger>> matrix, BigInteger modulo)
+        public static void RowReduce(List<List<BigInteger>> matrix, BigInteger modulo)
         {
             long rowCount = matrix.Count;
             long colCount = matrix[0].Count;
@@ -48,7 +48,7 @@ namespace WeierstrassCurveTest.Utils
                     }
                 }
 
-                LargeList<BigInteger> temp = matrix[i];
+                List<BigInteger> temp = matrix[i];
                 matrix[i] = matrix[r];
                 matrix[r] = temp;
 
@@ -70,15 +70,15 @@ namespace WeierstrassCurveTest.Utils
             }
         }
 
-        public static string MatrixToString(LargeList<LargeList<BigInteger>> matrix)
+        public static string MatrixToString(List<List<BigInteger>> matrix)
         {
             string res = "[\n";
 
             for (int i = 0; i < matrix.Count; i++)
             {
-                LargeList<BigInteger> row = matrix[i];
+                List<BigInteger> row = matrix[i];
                 res += "[ ";
-                for (long j = 0; j < row.Count; j++)
+                for (int j = 0; j < row.Count; j++)
                 {
                     res += row[j].ToString() + (j == row.Count - 1 ? "" : ",");
                 }
@@ -89,7 +89,7 @@ namespace WeierstrassCurveTest.Utils
             return res;
         }
 
-        public static LargeList<LargeList<BigInteger>> FindKernelBasis(LargeList<LargeList<BigInteger>> reducedMatrix, BigInteger modulo)
+        public static List<List<BigInteger>> FindKernelBasis(List<List<BigInteger>> reducedMatrix, BigInteger modulo)
         {
             long rowCount = reducedMatrix.Count;
             long colCount = reducedMatrix[0].Count;
@@ -107,7 +107,7 @@ namespace WeierstrassCurveTest.Utils
                 }
             }
 
-            LargeList<LargeList<BigInteger>> basis = new LargeList<LargeList<BigInteger>>();
+            List<List<BigInteger>> basis = new List<List<BigInteger>>();
             for (int c = 0; c < colCount; c++)
             {
                 if (!pivotColumns.Contains(c))
@@ -119,7 +119,7 @@ namespace WeierstrassCurveTest.Utils
                         int pivotRow = pivotColumns.IndexOf(p);
                         basisVector[p] = ModuloHelper.Abs(-reducedMatrix[pivotRow][c], modulo);
                     }
-                    basis.Add(new LargeList<BigInteger>(basisVector));
+                    basis.Add(new List<BigInteger>(basisVector));
                 }
             }
 

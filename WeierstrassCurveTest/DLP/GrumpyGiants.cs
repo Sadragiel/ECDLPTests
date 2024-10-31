@@ -18,7 +18,7 @@ namespace WeierstrassCurveTest.DLP
         {
             // Params
             BigInteger N = curve.Order();
-            int n = 2;
+            int n = 1;
             int m = (int)Math.Ceiling(Math.Sqrt((double)N / 2.0));
 
             // Baby Steps: { P + inP }
@@ -48,42 +48,42 @@ namespace WeierstrassCurveTest.DLP
                 // k = 1 + in - jm
                 if (j != -1)
                 {
-                    return 1 + i * n - j * m;
+                    return ModuloHelper.Abs(1 + i * n - j * m, N);
                 }
 
                 j = giant2Steps.IndexOf(newBaby);
                 // k = (1 + in + jm + j) * MultInv(2, N)
                 if (j != -1)
                 {
-                    return (1 + i * n + j * m + j) * multInvToTwo;
+                    return ModuloHelper.Abs((1 + i * n + j * m + j) * multInvToTwo, N);
                 }
 
                 j = babySteps.IndexOf(newGiant1);
                 // k = 1 + jn - im
                 if (j != -1)
                 {
-                    return 1 + j * n - i * m;
+                    return ModuloHelper.Abs(1 + j * n - i * m, N);
                 }
 
                 j = giant2Steps.IndexOf(newGiant1);
                 // k = im + jm + j
                 if (j != -1)
                 {
-                    return i * m + j * m + j;
+                    return ModuloHelper.Abs(i * m + j * m + j, N);
                 }
 
                 j = babySteps.IndexOf(newGiant2);
                 // k = (1 + jn + im + i) * MultInv(2, N)
                 if (j != -1)
                 {
-                    return (1 + j * n + i * m + i) * multInvToTwo;
+                    return ModuloHelper.Abs((1 + j * n + i * m + i) * multInvToTwo, N);
                 }
 
                 j = giant1Steps.IndexOf(newGiant2);
                 // k = jm + im + i
                 if (j != -1)
                 {
-                    return j * m + i * m + i;
+                    return ModuloHelper.Abs(j * m + i * m + i, N);
                 }
             }
 
