@@ -15,5 +15,8 @@ namespace WeierstrassCurveTest.Performance.Interfaces
         public BigInteger point2_y { get; set; }
         public BigInteger point2_order { get; set; }
         public BigInteger dlpSolution { get; set; }
+        public BigInteger x0 { get; set; }
+        public BigInteger x1 { get; set; }
+        public BigInteger x2 { get; set; }
     }
 }

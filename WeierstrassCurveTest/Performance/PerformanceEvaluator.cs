@@ -26,13 +26,17 @@ namespace WeierstrassCurveTest.Performance
     {
         private CurveName curveName;
         private MethodName methodName;
+        private bool withNegMap;
+        private bool withExtNegMap;
         private string datasetFilename;
 
-        public void Evaluate(string datasetFilename, CurveName curveName, MethodName methodName)
+        public void Evaluate(string datasetFilename, CurveName curveName, MethodName methodName, bool withNegMap, bool withExtNegMap)
         {
             this.curveName = curveName;
             this.methodName = methodName;
             this.datasetFilename = datasetFilename;
+            this.withNegMap = withNegMap;
+            this.withExtNegMap = withExtNegMap;
 
             DataProvider dataProvider = new DataProvider(datasetFilename);
 
@@ -60,6 +64,33 @@ namespace WeierstrassCurveTest.Performance
                     EllipticCurve curve = CreateCurve(data);
                     DLPMethod method = CreateMethod(curve);
 
+                    // Negation maps are enabled for Pollard method only
+                    if (methodName == MethodName.PollardRho && withNegMap)
+                    {
+                        (method as PollardRho).EnableNegationMaps(withExtNegMap);
+                        if (withExtNegMap)
+                        {
+                            var listOfPointsWithYZero = new List<Point>();
+
+                            if (data.x0 != -1)
+                            {
+                                listOfPointsWithYZero.Add(new Point(data.x0, 0));
+                            }
+
+                            if (data.x1 != -1)
+                            {
+                                listOfPointsWithYZero.Add(new Point(data.x1, 0));
+                            }
+
+                            if (data.x2 != -1)
+                            {
+                                listOfPointsWithYZero.Add(new Point(data.x2, 0));
+                            }
+
+                            (curve as WeierstrassCurve).setPointsWithYZero(listOfPointsWithYZero);
+                        }
+                    }
+
                     Point P = new Point(data.point1_x, data.point1_y);
                     Point Q = new Point(data.point2_x, data.point2_y);
 
@@ -75,7 +106,8 @@ namespace WeierstrassCurveTest.Performance
                     try
                     {
                         BigInteger result = method.Solve(P, Q);
-                        isSolutionFound = result == data.dlpSolution;
+                        // K is not taken modulo |P|, so it can be found different
+                        isSolutionFound = result == data.dlpSolution || curve.Mult(P, result).Equals(Q); 
                     }
                     catch (Exception ex) { }
 
@@ -88,7 +120,14 @@ namespace WeierstrassCurveTest.Performance
                     {
                         lock (lockObject)
                         {
-                            StoreResults(timeUsed, memoryUsed, isSolutionFound);
+                            StoreResults(
+                                timeUsed, 
+                                memoryUsed, 
+                                isSolutionFound,
+                                (method as PollardRho).iterationsCount,
+                                (method as PollardRho).foundWithNegationMap,
+                                (method as PollardRho).foundWithExtendedNegationMap
+                            );
                         }
                         Console.WriteLine("Evaluation finished by worker " + workerId);
                     }
@@ -109,7 +148,10 @@ namespace WeierstrassCurveTest.Performance
             // Initialize accumulators
             double sum1 = 0;
             double sum2 = 0;
-            int trueCount = 0;
+            double sum3 = 0;
+            int correctSolutionsCount = 0;
+            int negationMapUsageCount = 0;
+            int extendedNegationMapUsageCount = 0;
             int totalCount = 0;
 
             try
@@ -122,7 +164,7 @@ namespace WeierstrassCurveTest.Performance
                         // Split the line into fields
                         string[] fields = line.Split(',');
 
-                        if (fields.Length != 3)
+                        if (fields.Length != 6)
                         {
                             Console.WriteLine($"Invalid number of fields in line: {line}");
                             continue;
@@ -131,13 +173,25 @@ namespace WeierstrassCurveTest.Performance
                         // Parse the numeric values
                         if (double.TryParse(fields[0], NumberStyles.Any, CultureInfo.InvariantCulture, out double num1) &&
                             double.TryParse(fields[1], NumberStyles.Any, CultureInfo.InvariantCulture, out double num2) &&
-                            bool.TryParse(fields[2], out bool boolValue))
+                            bool.TryParse(fields[2], out bool isSolutionFound) &&
+                            double.TryParse(fields[3], NumberStyles.Any, CultureInfo.InvariantCulture, out double num3) &&
+                            bool.TryParse(fields[4], out bool foundWithNegationMap) &&
+                            bool.TryParse(fields[5], out bool foundWithExtendedNegationMap))
                         {
                             sum1 += num1;
                             sum2 += num2;
-                            if (boolValue)
+                            sum3 += num3;
+                            if (isSolutionFound)
                             {
-                                trueCount++;
+                                correctSolutionsCount++;
+                            }
+                            if (foundWithNegationMap)
+                            {
+                                negationMapUsageCount++;
+                            }
+                            if (foundWithExtendedNegationMap)
+                            {
+                                extendedNegationMapUsageCount++;
                             }
                             totalCount++;
                         }
@@ -151,15 +205,23 @@ namespace WeierstrassCurveTest.Performance
                 if (totalCount > 0)
                 {
                     // Calculate averages and accuracy
-                    double average1 = sum1 / totalCount;
-                    double average2 = sum2 / totalCount;
-                    double accuracy = (trueCount / (double)totalCount) * 100;
+                    double averageTime = sum1 / totalCount;
+                    double averageSpace = sum2 / totalCount;
+                    double accuracy = (correctSolutionsCount / (double)totalCount) * 100;
+                    double averageIterations = sum3 / totalCount;
+                    double negationMapUsage = (negationMapUsageCount / (double)totalCount) * 100;
+                    double extendedNegationMapUsage = (extendedNegationMapUsageCount / (double)totalCount) * 100;
 
                     // Log results to the console
+                    Console.WriteLine($"--------------------------------------------------");
                     Console.WriteLine($"File name: {filePath}");
-                    Console.WriteLine($"Average speed (ms): {average1:F2}");
-                    Console.WriteLine($"Average space usage (bytes): {average2:F2}");
+                    Console.WriteLine($"Average speed (ms): {averageTime:F2}");
+                    Console.WriteLine($"Average space usage (bytes): {averageSpace:F2}");
                     Console.WriteLine($"Accuracy of solving DLP: {accuracy:F2}%");
+                    Console.WriteLine($"Average itterations (scalar): {averageIterations:F2}");
+                    Console.WriteLine($"Negation maps usage: {negationMapUsage:F2}%");
+                    Console.WriteLine($"Extended negation maps usage: {extendedNegationMapUsage:F2}%");
+                    Console.WriteLine($"--------------------------------------------------");
                 }
                 else
                 {
@@ -204,10 +266,11 @@ namespace WeierstrassCurveTest.Performance
             return null;
         }
 
-        private void StoreResults(double timeUsed, long memoryUsed, bool isSolutionFound)
+        private void StoreResults(double timeUsed, long memoryUsed, bool isSolutionFound, int iterationsCount, bool foundWithNegMap, bool foundWithExtNegMap)
         {
-            string filePath = Path.Combine(Environment.CurrentDirectory, $"{curveName}_{methodName}.{datasetFilename}");
-            string[] record = { timeUsed.ToString(), memoryUsed.ToString(), isSolutionFound.ToString() };
+            string negMapPostfix = (withNegMap ? ".neg" : "") + (withExtNegMap ? "-ext" : "");
+            string filePath = Path.Combine(Environment.CurrentDirectory, $"v2_{curveName}_{methodName}{negMapPostfix}.{datasetFilename}");
+            string[] record = { timeUsed.ToString(), memoryUsed.ToString(), isSolutionFound.ToString(), iterationsCount.ToString(), foundWithNegMap.ToString(), foundWithExtNegMap.ToString() };
 
             using (StreamWriter writer = new StreamWriter(filePath, append: true))
             {

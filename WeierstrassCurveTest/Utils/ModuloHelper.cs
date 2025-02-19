@@ -14,6 +14,7 @@ namespace WeierstrassCurveTest.Utils
                 r = a % modulus;
                 (a, modulus) = (modulus, r);
                 (x, xLast) = (xLast - q * x, x);
+                //Console.WriteLine($"Mult inv log: a = {a}; x = {x}, xLast = {xLast}, q = {q}, r = {r}, modulus = {modulus} ");
             }
             if (xLast < 0)
                 xLast += mOriginal;

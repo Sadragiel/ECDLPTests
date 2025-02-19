@@ -9,6 +9,8 @@ namespace WeierstrassCurveTest.EllipticCurves
         private BigInteger a;
         private BigInteger b;
 
+        public List<Point> pointsOnAbscissaAxis = new List<Point>();
+
         public WeierstrassCurve(BigInteger a, BigInteger b, BigInteger p, BigInteger order) { 
             this.a = ModuloHelper.Abs(a, p);
             this.b = ModuloHelper.Abs(b, p);
@@ -83,6 +85,11 @@ namespace WeierstrassCurveTest.EllipticCurves
             BigInteger lambda = ModuloHelper.Abs((3 * BigInteger.ModPow(A.x, 2, p) + this.a) * ModuloHelper.MultInverse(2 * A.y, p), p);
 
             return CalculatePoint(lambda, A, A);
+        }
+
+        public void setPointsWithYZero(List<Point> pointsOnAbscissaAxis)
+        {
+            this.pointsOnAbscissaAxis = pointsOnAbscissaAxis;
         }
 
         private Point CalculatePoint(BigInteger lambda, Point A, Point B)
