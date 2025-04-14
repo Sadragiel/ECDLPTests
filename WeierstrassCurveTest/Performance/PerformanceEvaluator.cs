@@ -5,6 +5,8 @@ using WeierstrassCurveTest.DLP;
 using WeierstrassCurveTest.EllipticCurves;
 using WeierstrassCurveTest.Performance.Interfaces;
 using WeierstrassCurveTest.Types;
+using WeierstrassCurveTest.UI;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WeierstrassCurveTest.Performance
 {
@@ -24,21 +26,83 @@ namespace WeierstrassCurveTest.Performance
 
     internal class PerformanceEvaluator
     {
+        private UserInterface form;
+
         private CurveName curveName;
         private MethodName methodName;
+        private bool usePohligHellman;
         private bool withNegMap;
         private bool withExtNegMap;
         private string datasetFilename;
 
-        public void Evaluate(string datasetFilename, CurveName curveName, MethodName methodName, bool withNegMap, bool withExtNegMap)
+        public PerformanceEvaluator (UserInterface form)
+        {
+            this.form = form;
+        }
+
+        public string ResultsFilePath
+        {
+            get
+            {
+                string negMapPostfix = (withNegMap ? ".neg" : "") + (withExtNegMap ? "-ext" : "");
+                return Path.Combine(Environment.CurrentDirectory, $"v3_{curveName}_{methodName}{negMapPostfix}.{datasetFilename}");
+            }
+        }
+
+        public string Evaluate(
+            DatastItem data,
+            CurveName curveName,
+            MethodName methodName,
+            bool usePohligHellman,
+            bool withNegMap,
+            bool withExtNegMap
+        )
         {
             this.curveName = curveName;
             this.methodName = methodName;
-            this.datasetFilename = datasetFilename;
             this.withNegMap = withNegMap;
             this.withExtNegMap = withExtNegMap;
+            this.usePohligHellman = usePohligHellman;
+            //Console.WriteLine(data);
 
-            DataProvider dataProvider = new DataProvider(datasetFilename);
+            var (method, curve, P, Q) = ProcessData(data);
+            //Console.WriteLine("Data is proccessed");
+
+            BigInteger ek = data.dlpSolution;
+            BigInteger k = method.Solve(P, Q);
+            
+            bool isCorrect = k == ek || curve.Mult(P, k).Equals(Q);
+            string resultCharacterization = isCorrect ? "correct" : "incorrect";
+
+            //Console.WriteLine("The calculations are done");
+            return $"Input: P {P} and Q {Q}.\n\r" +
+                $"Expected: k = {ek}\n\r" +
+                $"Output: k = {k} - this is {resultCharacterization} result!\n\r";
+        }
+
+        public string Evaluate(
+            string filePath,
+            CurveName curveName,
+            MethodName methodName,
+            bool usePohligHellman,
+            bool withNegMap,
+            bool withExtNegMap
+        )
+        {
+            this.curveName = curveName;
+            this.methodName = methodName;
+            this.datasetFilename = Path.GetFileName(filePath);
+            this.withNegMap = withNegMap;
+            this.withExtNegMap = withExtNegMap;
+            this.usePohligHellman = usePohligHellman;
+
+            Console.WriteLine($"withExtNegMap = {withExtNegMap}, this.withExtNegMap = {this.withExtNegMap}");
+
+
+            DataProvider dataProvider = new DataProvider(filePath);
+
+            form.SetHeatingTotalItems(dataProvider.heatingTotal);
+            form.SetProccessingTotalItems(dataProvider.proccessingTotal);
 
             // Object to lock for thread-safety when fetching data and writing to file
             object lockObject = new object();
@@ -50,64 +114,34 @@ namespace WeierstrassCurveTest.Performance
                 {
                     Console.WriteLine("Evaluating dataitem");
                     DatastItem data = null;
+                    bool isHeating = false;
                     // Ensure that only one thread fetches a new data item at a time
                     lock (lockObject)
                     {
                         if (!dataProvider.complete)
                         {
-                            data = dataProvider.GetNext();
+                            (data, isHeating) = dataProvider.GetNext();
                         }
                     }
 
                     if (data == null) break; // Stop if no more data items are available
 
-                    EllipticCurve curve = CreateCurve(data);
-                    DLPMethod method = CreateMethod(curve);
-
-                    // Negation maps are enabled for Pollard method only
-                    if (methodName == MethodName.PollardRho && withNegMap)
-                    {
-                        (method as PollardRho).EnableNegationMaps(withExtNegMap);
-                        if (withExtNegMap)
-                        {
-                            var listOfPointsWithYZero = new List<Point>();
-
-                            if (data.x0 != -1)
-                            {
-                                listOfPointsWithYZero.Add(new Point(data.x0, 0));
-                            }
-
-                            if (data.x1 != -1)
-                            {
-                                listOfPointsWithYZero.Add(new Point(data.x1, 0));
-                            }
-
-                            if (data.x2 != -1)
-                            {
-                                listOfPointsWithYZero.Add(new Point(data.x2, 0));
-                            }
-
-                            (curve as WeierstrassCurve).setPointsWithYZero(listOfPointsWithYZero);
-                        }
-                    }
-
-                    Point P = new Point(data.point1_x, data.point1_y);
-                    Point Q = new Point(data.point2_x, data.point2_y);
+                    var (method, curve, P, Q) = ProcessData(data);
 
                     // Collect garbage to get a baseline memory usage
                     GC.Collect();
                     GC.WaitForPendingFinalizers();
                     GC.Collect();
 
+                    //Console.WriteLine($"Solving DLP for points: P {P}, Q {Q}, on curve with params a = {data.curveParam1}; b = {data.curveParam2}");
+
+                    BigInteger result = -1;
                     long memoryBefore = GC.GetAllocatedBytesForCurrentThread();
                     var stopwatch = Stopwatch.StartNew();
-                    bool isSolutionFound = false;
 
                     try
                     {
-                        BigInteger result = method.Solve(P, Q);
-                        // K is not taken modulo |P|, so it can be found different
-                        isSolutionFound = result == data.dlpSolution || curve.Mult(P, result).Equals(Q); 
+                        result = method.Solve(P, Q);
                     }
                     catch (Exception ex) { }
 
@@ -115,8 +149,9 @@ namespace WeierstrassCurveTest.Performance
                     long memoryAfter = GC.GetAllocatedBytesForCurrentThread();
                     long memoryUsed = memoryAfter - memoryBefore;
                     double timeUsed = stopwatch.ElapsedMilliseconds;
+                    bool isSolutionFound = isSolutionFound = result == data.dlpSolution || curve.Mult(P, result).Equals(Q);
 
-                    if (!dataProvider.heating)
+                    if (!isHeating)
                     {
                         lock (lockObject)
                         {
@@ -124,15 +159,17 @@ namespace WeierstrassCurveTest.Performance
                                 timeUsed, 
                                 memoryUsed, 
                                 isSolutionFound,
-                                (method as PollardRho).iterationsCount,
-                                (method as PollardRho).foundWithNegationMap,
-                                (method as PollardRho).foundWithExtendedNegationMap
+                                ((method as PohligHellman).supportMethod as PollardRho).iterationsCount,
+                                ((method as PohligHellman).supportMethod as PollardRho).foundWithNegationMap,
+                                ((method as PohligHellman).supportMethod as PollardRho).foundWithExtendedNegationMap
                             );
                         }
+                        form.IncrementProccessingProgress();
                         Console.WriteLine("Evaluation finished by worker " + workerId);
                     }
                     else
                     {
+                        form.IncrementHeatingProgress();
                         Console.WriteLine("Program is heating up by worker " + workerId);
                     }
 
@@ -141,9 +178,10 @@ namespace WeierstrassCurveTest.Performance
             });
 
             Console.WriteLine("All workers completed.");
+            return ResultsFilePath;
         }
 
-        public void CalculateAndLogStatistics(string filePath)
+        public string CalculateAndLogStatistics(string filePath)
         {
             // Initialize accumulators
             double sum1 = 0;
@@ -197,7 +235,7 @@ namespace WeierstrassCurveTest.Performance
                         }
                         else
                         {
-                            Console.WriteLine($"Failed to parse line: {line}");
+                            throw new Exception($"Failed to parse line: {line}");
                         }
                     }
                 }
@@ -213,25 +251,77 @@ namespace WeierstrassCurveTest.Performance
                     double extendedNegationMapUsage = (extendedNegationMapUsageCount / (double)totalCount) * 100;
 
                     // Log results to the console
-                    Console.WriteLine($"--------------------------------------------------");
-                    Console.WriteLine($"File name: {filePath}");
-                    Console.WriteLine($"Average speed (ms): {averageTime:F2}");
-                    Console.WriteLine($"Average space usage (bytes): {averageSpace:F2}");
-                    Console.WriteLine($"Accuracy of solving DLP: {accuracy:F2}%");
-                    Console.WriteLine($"Average itterations (scalar): {averageIterations:F2}");
-                    Console.WriteLine($"Negation maps usage: {negationMapUsage:F2}%");
-                    Console.WriteLine($"Extended negation maps usage: {extendedNegationMapUsage:F2}%");
-                    Console.WriteLine($"--------------------------------------------------");
+                    string result = $"Evaluation is finished!\n\r" +
+                        $"File with results: {filePath}\n\r" +
+                        $"Total number of items: {totalCount}\n\r" +
+                        $"Average speed (ms): {averageTime:F2}\n\r" +
+                        $"Average space usage (bytes): {averageSpace:F2}\n\r" +
+                        $"Accuracy of solving DLP: {accuracy:F2}%\n\r" +
+                        $"Average itterations (scalar): {averageIterations:F2}\n\r" +
+                        $"Negation maps usage: {negationMapUsage:F2}%\n\r" +
+                        $"Extended negation maps usage: {extendedNegationMapUsage:F2}%\n\r";
+                    //Console.WriteLine($"--------------------------------------------------");
+                    //Console.WriteLine($"File name: {filePath}");
+                    //Console.WriteLine($"Average speed (ms): {averageTime:F2}");
+                    //Console.WriteLine($"Average space usage (bytes): {averageSpace:F2}");
+                    //Console.WriteLine($"Accuracy of solving DLP: {accuracy:F2}%");
+                    //Console.WriteLine($"Average itterations (scalar): {averageIterations:F2}");
+                    //Console.WriteLine($"Negation maps usage: {negationMapUsage:F2}%");
+                    //Console.WriteLine($"Extended negation maps usage: {extendedNegationMapUsage:F2}%");
+                    //Console.WriteLine($"--------------------------------------------------");
+                    return result;
                 }
                 else
                 {
-                    Console.WriteLine("No valid data found in the file.");
+                    throw new Exception("No valid data found in the file.");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error reading the file: {ex.Message}");
+                throw new Exception($"Error reading the file: {ex.Message}");
             }
+        }
+
+        private Tuple<DLPMethod, EllipticCurve, Types.Point, Types.Point> ProcessData(DatastItem data)
+        {
+            EllipticCurve curve = CreateCurve(data);
+            DLPMethod method = CreateMethod(curve);
+
+            if (usePohligHellman)
+            {
+                method = new PohligHellman(curve, method);
+            }
+
+            if (withNegMap)
+            {
+                method.EnableNegationMaps(withExtNegMap);
+                if (withExtNegMap)
+                {
+                    var listOfPointsWithYZero = new List<Types.Point>();
+
+                    if (data.x0 != -1)
+                    {
+                        listOfPointsWithYZero.Add(new Types.Point(data.x0, 0));
+                    }
+
+                    if (data.x1 != -1)
+                    {
+                        listOfPointsWithYZero.Add(new Types.Point(data.x1, 0));
+                    }
+
+                    if (data.x2 != -1)
+                    {
+                        listOfPointsWithYZero.Add(new Types.Point(data.x2, 0));
+                    }
+
+                    curve.setPointsWithYZero(listOfPointsWithYZero);
+                }
+            }
+
+            Types.Point P = new Types.Point(data.point1_x, data.point1_y);
+            Types.Point Q = new Types.Point(data.point2_x, data.point2_y);
+
+            return new Tuple<DLPMethod, EllipticCurve, Types.Point, Types.Point>(method, curve, P, Q);
         }
 
         private EllipticCurve CreateCurve(DatastItem data)
@@ -239,9 +329,9 @@ namespace WeierstrassCurveTest.Performance
             switch (curveName)
             {
                 case CurveName.Weierstrass:
-                    return new WeierstrassCurve(data.curveParam1, data.curveParam2, data.modulo, data.order);
+                    return new WeierstrassCurve(data.curveParam1, data.curveParam2, data.modulo, data.point1_order);
                 case CurveName.Edwards:
-                    return new EdwardsCurve(data.curveParam1, data.modulo, data.order);
+                    return new EdwardsCurve(data.curveParam1, data.modulo, data.point1_order);
             }
 
             return null;
@@ -268,11 +358,9 @@ namespace WeierstrassCurveTest.Performance
 
         private void StoreResults(double timeUsed, long memoryUsed, bool isSolutionFound, int iterationsCount, bool foundWithNegMap, bool foundWithExtNegMap)
         {
-            string negMapPostfix = (withNegMap ? ".neg" : "") + (withExtNegMap ? "-ext" : "");
-            string filePath = Path.Combine(Environment.CurrentDirectory, $"v2_{curveName}_{methodName}{negMapPostfix}.{datasetFilename}");
             string[] record = { timeUsed.ToString(), memoryUsed.ToString(), isSolutionFound.ToString(), iterationsCount.ToString(), foundWithNegMap.ToString(), foundWithExtNegMap.ToString() };
 
-            using (StreamWriter writer = new StreamWriter(filePath, append: true))
+            using (StreamWriter writer = new StreamWriter(ResultsFilePath, append: true))
             {
                 string newLine = string.Join(",", record);
                 writer.WriteLine(newLine);

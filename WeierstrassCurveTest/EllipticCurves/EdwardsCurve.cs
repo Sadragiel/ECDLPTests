@@ -17,7 +17,7 @@ namespace WeierstrassCurveTest.EllipticCurves
             this.order = order;
         }
 
-        public override bool TestPoint(Point A)
+        public override bool TestPoint(Types.Point A)
         {
             // y^2 + x^2 = 1 + d * x^2 + y^2  mod(p)
             BigInteger x2 = ModuloHelper.Abs(A.x * A.x, p);
@@ -27,7 +27,7 @@ namespace WeierstrassCurveTest.EllipticCurves
             return left.Equals(right);
         }
 
-        public override Point GetRandomPoint()
+        public override Types.Point GetRandomPoint()
         {
             while (true)
             {
@@ -41,7 +41,7 @@ namespace WeierstrassCurveTest.EllipticCurves
                     BigInteger quadraticResiduosity = ModuloHelper.Abs((1 - x2) * multInvPart, p);
 
                     BigInteger y = ModuloHelper.SquareRootMod(quadraticResiduosity, p);
-                    return new Point(x, y);
+                    return new Types.Point(x, y);
                 }
                 catch (Exception e)
                 {
@@ -50,7 +50,7 @@ namespace WeierstrassCurveTest.EllipticCurves
             }
         }
 
-        public override Point Add(Point A, Point B)
+        public override Types.Point Add(Types.Point A, Types.Point B)
         {
             // handle points of Infinity:
             if (A.atInfinity)
@@ -66,7 +66,7 @@ namespace WeierstrassCurveTest.EllipticCurves
             // A - A = 0
             if (A.x.Equals(B.x) && A.y.Equals(ModuloHelper.AddInverse(B.y, p)))
             {
-                return Point.getPointAtInfinity();
+                return Types.Point.getPointAtInfinity();
             }
 
             // (x1, y1) + (x2, y2) = ( (x1y2 + x2y1) / (1 + dx1x2y1y2), (y1y2 - x1x2) / (1 - dx1x2y1y2) )
@@ -81,10 +81,10 @@ namespace WeierstrassCurveTest.EllipticCurves
             BigInteger x3 = ModuloHelper.Abs((x1y2 + x2y1) * ModuloHelper.MultInverse(1 + dx1x2y1y2, p), p);
             BigInteger y3 = ModuloHelper.Abs((y1y2 - x1x2) * ModuloHelper.MultInverse(1 - dx1x2y1y2, p), p);
 
-            return new Point(x3, y3);
+            return new Types.Point(x3, y3);
         }
 
-        public override Point Double(Point A)
+        public override Types.Point Double(Types.Point A)
         {
             return Add(A, A);
         }

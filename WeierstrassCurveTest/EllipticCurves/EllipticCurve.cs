@@ -10,26 +10,37 @@ namespace WeierstrassCurveTest.EllipticCurves
 
         protected BigInteger p;
 
+        public List<Types.Point> pointsOnAbscissaAxis = new List<Types.Point>();
+
         protected EllipticCurve() { }
 
         public BigInteger Order() { return order; }
 
         public BigInteger Modulo() { return p; }
 
-        public abstract bool TestPoint(Point A);
+        public abstract bool TestPoint(Types.Point A);
 
-        public abstract Point GetRandomPoint();
+        public abstract Types.Point GetRandomPoint();
 
-        public abstract Point Add(Point A, Point B);
+        public abstract Types.Point Add(Types.Point A, Types.Point B);
 
-        public abstract Point Double(Point A);
+        public abstract Types.Point Double(Types.Point A);
 
-        public virtual Point Invert(Point A)
+        public void setPointsWithYZero(List<Types.Point> pointsOnAbscissaAxis)
         {
-            return new Point(A.x, ModuloHelper.AddInverse(A.y, p));
+            this.pointsOnAbscissaAxis = pointsOnAbscissaAxis;
         }
 
-        public virtual Point Mult(Point A, BigInteger k)
+        public virtual Types.Point Invert(Types.Point A)
+        {
+            if (A.atInfinity)
+            {
+                return Types.Point.getPointAtInfinity();
+            }
+            return new Types.Point(A.x, ModuloHelper.AddInverse(A.y, p));
+        }
+
+        public virtual Types.Point Mult(Types.Point A, BigInteger k)
         {
             int sign = k.Sign;
             k = BigInteger.Abs(k);
@@ -37,8 +48,8 @@ namespace WeierstrassCurveTest.EllipticCurves
             // Double-and-add method of point multiplication
             bool[] factorBitsRepresentation = BigIntHelper.BigIntegerToBitsArray(k);
 
-            Point res = Point.getPointAtInfinity();
-            Point temp = A;
+            Types.Point res = Types.Point.getPointAtInfinity();
+            Types.Point temp = A;
 
             foreach (bool b in factorBitsRepresentation)
             {
@@ -53,9 +64,9 @@ namespace WeierstrassCurveTest.EllipticCurves
             return sign == 1 ? res : Invert(res);
         }
 
-        public BigInteger GetPointOrder(Point A)
+        public BigInteger GetPointOrder(Types.Point A)
         {
-            Point multiple = A;
+            Types.Point multiple = A;
             BigInteger order;
             for (order = BigInteger.One; order < this.order && !multiple.atInfinity; order++)
             {

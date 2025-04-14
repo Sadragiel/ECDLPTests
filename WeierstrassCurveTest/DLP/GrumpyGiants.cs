@@ -3,6 +3,8 @@ using WeierstrassCurveTest.EllipticCurves;
 using WeierstrassCurveTest.Types;
 using WeierstrassCurveTest.Utils;
 
+using Point = WeierstrassCurveTest.Types.Point;
+
 namespace WeierstrassCurveTest.DLP
 {
     internal class GrumpyGiants : DLPMethod

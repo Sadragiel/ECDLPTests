@@ -4,6 +4,7 @@ using WeierstrassCurveTest.EllipticCurves;
 using WeierstrassCurveTest.Types;
 using WeierstrassCurveTest.Utils;
 
+using Point = WeierstrassCurveTest.Types.Point;
 
 // WIP: Method is not working for large numbers
 namespace WeierstrassCurveTest.DLP

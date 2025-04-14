@@ -7,119 +7,123 @@ using WeierstrassCurveTest.Performance;
 using WeierstrassCurveTest.Types;
 using WeierstrassCurveTest.Utils;
 
-PerformanceEvaluator evaluator = new PerformanceEvaluator();
-
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.com-data25.csv");
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg.com-data25.csv");
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg-ext.com-data25.csv");
-
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.com-data26.csv");
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg.com-data26.csv");
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg-ext.com-data26.csv");
-//evaluator.CalculateAndLogStatistics("v3_Weierstrass_PollardRho.neg-ext.v2-com-data26.csv");
-
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.com-data25.csv");
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg.com-data25.csv");
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg-ext.com-data25.csv");
+using Point = WeierstrassCurveTest.Types.Point;
 
 
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.com-data26.csv");
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg.com-data26.csv");
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg-ext.com-data26.csv");
+//PerformanceEvaluator evaluator = new PerformanceEvaluator();
+
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.com-data25.csv");
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg.com-data25.csv");
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg-ext.com-data25.csv");
+
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.com-data26.csv");
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg.com-data26.csv");
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg-ext.com-data26.csv");
+////evaluator.CalculateAndLogStatistics("v3_Weierstrass_PollardRho.neg-ext.v2-com-data26.csv");
+
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.com-data25.csv");
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg.com-data25.csv");
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg-ext.com-data25.csv");
 
 
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.com-data27.csv");
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg.com-data27.csv");
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg-ext.com-data27.csv");
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.com-data26.csv");
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg.com-data26.csv");
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg-ext.com-data26.csv");
 
 
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.com-data28.csv");
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg.com-data28.csv");
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg-ext.com-data28.csv");
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.com-data27.csv");
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg.com-data27.csv");
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg-ext.com-data27.csv");
 
 
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.com-data29.csv");
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg.com-data29.csv");
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg-ext.com-data29.csv");
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.com-data28.csv");
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg.com-data28.csv");
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg-ext.com-data28.csv");
 
 
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.com-data30.csv");
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg.com-data30.csv");
-//evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg-ext.com-data30.csv");
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.com-data29.csv");
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg.com-data29.csv");
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg-ext.com-data29.csv");
 
 
-//evaluator.CalculateAndLogStatistics("Weierstrass_BSGS.data25.csv");
-//evaluator.CalculateAndLogStatistics("Weierstrass_BSGS.data26.csv");
-//evaluator.CalculateAndLogStatistics("Weierstrass_BSGS.data27.csv");
-//evaluator.CalculateAndLogStatistics("Weierstrass_BSGS.data28.csv");
-//evaluator.CalculateAndLogStatistics("Weierstrass_BSGS.data29.csv");
-//evaluator.CalculateAndLogStatistics("Weierstrass_BSGS.data30.csv");
-//evaluator.CalculateAndLogStatistics("Weierstrass_GrympyGiants.data25.csv");
-//evaluator.CalculateAndLogStatistics("Weierstrass_GrympyGiants.data26.csv");
-//evaluator.CalculateAndLogStatistics("Weierstrass_GrympyGiants.data27.csv");
-//evaluator.CalculateAndLogStatistics("Weierstrass_GrympyGiants.data28.csv");
-//evaluator.CalculateAndLogStatistics("Weierstrass_GrympyGiants.data29.csv");
-//evaluator.CalculateAndLogStatistics("Weierstrass_GrympyGiants.data30.csv");
-//evaluator.CalculateAndLogStatistics("Weierstrass_PollardRho.data25.csv");
-//evaluator.CalculateAndLogStatistics("Weierstrass_PollardRho.data26.csv");
-//evaluator.CalculateAndLogStatistics("Weierstrass_PollardRho.data27.csv");
-//evaluator.CalculateAndLogStatistics("Weierstrass_PollardRho.data28.csv");
-//evaluator.CalculateAndLogStatistics("Weierstrass_PollardRho.data29.csv");
-//evaluator.CalculateAndLogStatistics("Weierstrass_PollardRho.data30.csv");
-
-//evaluator.Evaluate("data26.csv", CurveName.Weierstrass, MethodName.BSGS);
-//evaluator.Evaluate("data26.csv", CurveName.Weierstrass, MethodName.GrympyGiants);
-//evaluator.Evaluate("com-data25.csv", CurveName.Weierstrass, MethodName.PollardRho, false, false);
-//evaluator.Evaluate("com-data28.csv", CurveName.Weierstrass, MethodName.PollardRho, true, false);
-//evaluator.Evaluate("v2-com-data26.csv", CurveName.Weierstrass, MethodName.PollardRho, true, true);
-
-//evaluator.Evaluate("data27.csv", CurveName.Weierstrass, MethodName.BSGS);
-//evaluator.Evaluate("data27.csv", CurveName.Weierstrass, MethodName.GrympyGiants);
-//evaluator.Evaluate("data27.csv", CurveName.Weierstrass, MethodName.PollardRho);
-
-//evaluator.Evaluate("data28.csv", CurveName.Weierstrass, MethodName.BSGS);
-//evaluator.Evaluate("data28.csv", CurveName.Weierstrass, MethodName.GrympyGiants);
-//evaluator.Evaluate("data28.csv", CurveName.Weierstrass, MethodName.PollardRho);
-
-//evaluator.Evaluate("data25.csv", CurveName.Weierstrass, MethodName.LasVegas);
-//evaluator.Evaluate("data25.csv", CurveName.Weierstrass, MethodName.Kangaroo);
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.com-data30.csv");
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg.com-data30.csv");
+////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg-ext.com-data30.csv");
 
 
-// evaluator.Evaluate("data30.csv", CurveName.Weierstrass, MethodName.BSGS); // already procecced (69+5)k data items
-//evaluator.Evaluate("data30.csv", CurveName.Weierstrass, MethodName.GrympyGiants);
-//evaluator.Evaluate("data30.csv", CurveName.Weierstrass, MethodName.PollardRho);
-//evaluator.Evaluate("data30.csv", CurveName.Weierstrass, MethodName.LasVegas);
-//evaluator.Evaluate("data30.csv", CurveName.Weierstrass, MethodName.Kangaroo);
+////evaluator.CalculateAndLogStatistics("Weierstrass_BSGS.data25.csv");
+////evaluator.CalculateAndLogStatistics("Weierstrass_BSGS.data26.csv");
+////evaluator.CalculateAndLogStatistics("Weierstrass_BSGS.data27.csv");
+////evaluator.CalculateAndLogStatistics("Weierstrass_BSGS.data28.csv");
+////evaluator.CalculateAndLogStatistics("Weierstrass_BSGS.data29.csv");
+////evaluator.CalculateAndLogStatistics("Weierstrass_BSGS.data30.csv");
+////evaluator.CalculateAndLogStatistics("Weierstrass_GrympyGiants.data25.csv");
+////evaluator.CalculateAndLogStatistics("Weierstrass_GrympyGiants.data26.csv");
+////evaluator.CalculateAndLogStatistics("Weierstrass_GrympyGiants.data27.csv");
+////evaluator.CalculateAndLogStatistics("Weierstrass_GrympyGiants.data28.csv");
+////evaluator.CalculateAndLogStatistics("Weierstrass_GrympyGiants.data29.csv");
+////evaluator.CalculateAndLogStatistics("Weierstrass_GrympyGiants.data30.csv");
+////evaluator.CalculateAndLogStatistics("Weierstrass_PollardRho.data25.csv");
+////evaluator.CalculateAndLogStatistics("Weierstrass_PollardRho.data26.csv");
+////evaluator.CalculateAndLogStatistics("Weierstrass_PollardRho.data27.csv");
+////evaluator.CalculateAndLogStatistics("Weierstrass_PollardRho.data28.csv");
+////evaluator.CalculateAndLogStatistics("Weierstrass_PollardRho.data29.csv");
+////evaluator.CalculateAndLogStatistics("Weierstrass_PollardRho.data30.csv");
 
-//evaluator.Evaluate("data35.csv", CurveName.Weierstrass, MethodName.BSGS);
-//evaluator.Evaluate("data35.csv", CurveName.Weierstrass, MethodName.GrympyGiants);
-////evaluator.Evaluate("data35.csv", CurveName.Weierstrass, MethodName.Kangaroo);
-//evaluator.Evaluate("data35.csv", CurveName.Weierstrass, MethodName.PollardRho);
-//evaluator.Evaluate("data35.csv", CurveName.Weierstrass, MethodName.LasVegas);
+////evaluator.Evaluate("data26.csv", CurveName.Weierstrass, MethodName.BSGS);
+////evaluator.Evaluate("data26.csv", CurveName.Weierstrass, MethodName.GrympyGiants);
 
-//evaluator.Evaluate("data40.csv", CurveName.Weierstrass, MethodName.BSGS);
-//evaluator.Evaluate("data40.csv", CurveName.Weierstrass, MethodName.GrympyGiants);
-//evaluator.Evaluate("data40.csv", CurveName.Weierstrass, MethodName.Kangaroo);
-//evaluator.Evaluate("data40.csv", CurveName.Weierstrass, MethodName.PollardRho);
-//evaluator.Evaluate("data40.csv", CurveName.Weierstrass, MethodName.LasVegas);
+////evaluator.Evaluate("com-data25.csv", CurveName.Weierstrass, MethodName.PollardRho, false, false);
+////evaluator.Evaluate("com-data28.csv", CurveName.Weierstrass, MethodName.PollardRho, true, false);
+////evaluator.Evaluate("v2-com-data26.csv", CurveName.Weierstrass, MethodName.PollardRho, true, true);
 
-//evaluator.Evaluate("data45.csv", CurveName.Weierstrass, MethodName.BSGS);
-//evaluator.Evaluate("data45.csv", CurveName.Weierstrass, MethodName.GrympyGiants);
-//evaluator.Evaluate("data45.csv", CurveName.Weierstrass, MethodName.Kangaroo);
-//evaluator.Evaluate("data45.csv", CurveName.Weierstrass, MethodName.PollardRho);
-//evaluator.Evaluate("data45.csv", CurveName.Weierstrass, MethodName.LasVegas);
+////evaluator.Evaluate("data27.csv", CurveName.Weierstrass, MethodName.BSGS);
+////evaluator.Evaluate("data27.csv", CurveName.Weierstrass, MethodName.GrympyGiants);
+////evaluator.Evaluate("data27.csv", CurveName.Weierstrass, MethodName.PollardRho);
+
+////evaluator.Evaluate("data28.csv", CurveName.Weierstrass, MethodName.BSGS);
+////evaluator.Evaluate("data28.csv", CurveName.Weierstrass, MethodName.GrympyGiants);
+////evaluator.Evaluate("data28.csv", CurveName.Weierstrass, MethodName.PollardRho);
+
+////evaluator.Evaluate("data25.csv", CurveName.Weierstrass, MethodName.LasVegas);
+////evaluator.Evaluate("data25.csv", CurveName.Weierstrass, MethodName.Kangaroo);
 
 
-//WeierstrassCurve weierstrassCurve = new WeierstrassCurve(
-//    new BigInteger(1091),
-//    new BigInteger(761),
-//    new BigInteger(2081),
-//    new BigInteger(2111) // calculated with SageMath 
-//);
+//// evaluator.Evaluate("data30.csv", CurveName.Weierstrass, MethodName.BSGS); // already procecced (69+5)k data items
+////evaluator.Evaluate("data30.csv", CurveName.Weierstrass, MethodName.GrympyGiants);
+////evaluator.Evaluate("data30.csv", CurveName.Weierstrass, MethodName.PollardRho);
+////evaluator.Evaluate("data30.csv", CurveName.Weierstrass, MethodName.LasVegas);
+////evaluator.Evaluate("data30.csv", CurveName.Weierstrass, MethodName.Kangaroo);
 
-// modulo,curveParam1,curveParam2,order,point1_x,point1_y,point1_order,point2_x,point2_y,point2_order,dlpSolution
+////evaluator.Evaluate("data35.csv", CurveName.Weierstrass, MethodName.BSGS);
+////evaluator.Evaluate("data35.csv", CurveName.Weierstrass, MethodName.GrympyGiants);
+//////evaluator.Evaluate("data35.csv", CurveName.Weierstrass, MethodName.Kangaroo);
+////evaluator.Evaluate("data35.csv", CurveName.Weierstrass, MethodName.PollardRho);
+////evaluator.Evaluate("data35.csv", CurveName.Weierstrass, MethodName.LasVegas);
 
-// 33554393,3475383,5317434,33565937,3192429,369664,33565937,23860407,10200230,33565937,3420243
+////evaluator.Evaluate("data40.csv", CurveName.Weierstrass, MethodName.BSGS);
+////evaluator.Evaluate("data40.csv", CurveName.Weierstrass, MethodName.GrympyGiants);
+////evaluator.Evaluate("data40.csv", CurveName.Weierstrass, MethodName.Kangaroo);
+////evaluator.Evaluate("data40.csv", CurveName.Weierstrass, MethodName.PollardRho);
+////evaluator.Evaluate("data40.csv", CurveName.Weierstrass, MethodName.LasVegas);
+
+////evaluator.Evaluate("data45.csv", CurveName.Weierstrass, MethodName.BSGS);
+////evaluator.Evaluate("data45.csv", CurveName.Weierstrass, MethodName.GrympyGiants);
+////evaluator.Evaluate("data45.csv", CurveName.Weierstrass, MethodName.Kangaroo);
+////evaluator.Evaluate("data45.csv", CurveName.Weierstrass, MethodName.PollardRho);
+////evaluator.Evaluate("data45.csv", CurveName.Weierstrass, MethodName.LasVegas);
+
+
+////WeierstrassCurve weierstrassCurve = new WeierstrassCurve(
+////    new BigInteger(1091),
+////    new BigInteger(761),
+////    new BigInteger(2081),
+////    new BigInteger(2111) // calculated with SageMath 
+////);
+
+//// modulo,curveParam1,curveParam2,order,point1_x,point1_y,point1_order,point2_x,point2_y,point2_order,dlpSolution
+
+//// 33554393,3475383,5317434,33565937,3192429,369664,33565937,23860407,10200230,33565937,3420243
 
 //List<BigInteger> values = new List<BigInteger> {
 //    //33554393,28925137,14906480,33559380,3491853,11671408,16779690,31896471,22533984,578610,12003883,28936301,28707962,9464523
@@ -135,7 +139,7 @@ PerformanceEvaluator evaluator = new PerformanceEvaluator();
 
 
 //int row = 0;
-//BigInteger p, a, b, ord, px, py, qx, qy, ek, x1, x2, x3;
+//BigInteger p, a, b, ord, px, py, pord, qx, qy, ek, x1, x2, x3;
 
 
 //WeierstrassCurve weierstrassCurve;
@@ -145,15 +149,19 @@ PerformanceEvaluator evaluator = new PerformanceEvaluator();
 //    p = values[row * 14];
 //    a = values[row * 14 + 1];
 //    b = values[row * 14 + 2];
-//    ord = values[row * 14 + 3];
+//    ord = values[row * 14 + 3]; 
 //    px = values[row * 14 + 4];
 //    py = values[row * 14 + 5];
+//    pord = values[row * 14 + 6];
 //    qx = values[row * 14 + 7];
 //    qy = values[row * 14 + 8];
 //    ek = values[row * 14 + 10];
 //    x1 = values[row * 14 + 11];
 //    x2 = values[row * 14 + 12];
 //    x3 = values[row * 14 + 13];
+
+//    // ord should be pord
+//    ord = pord;
 
 //    List<Point> pointsWithYZero = new List<Point> {
 //        new Point(x1, 0),
@@ -176,45 +184,48 @@ PerformanceEvaluator evaluator = new PerformanceEvaluator();
 //Point point2 = new Point(qx, qy);
 //BigInteger expectedK = ek;
 
-////Console.WriteLine($"|P| = {point1Order}; k mod |P| = {ModuloHelper.Abs(ek, point1Order)}");
-////Console.WriteLine($"kP = {ek} * {point1} = Q({point2}) = {weierstrassCurve.Mult(point1, ek)}");
+//// For point Q (9678760; 67039352) the order is 2 397 253   | p order is 33 561 542
+////Console.WriteLine($"For point Q {point2} the order is {weierstrassCurve.GetPointOrder(point2)}");
+
+//////Console.WriteLine($"|P| = {point1Order}; k mod |P| = {ModuloHelper.Abs(ek, point1Order)}");
+//////Console.WriteLine($"kP = {ek} * {point1} = Q({point2}) = {weierstrassCurve.Mult(point1, ek)}");
 
 
-////// hareTriplet: 118 * P + 67 * Q
-////// turtleTriplet: 74 * P + 15 * Q
-////Console.WriteLine($"Triplet1: {weierstrassCurve.Add(weierstrassCurve.Mult(point1, 118), weierstrassCurve.Mult(point2, 67))}");
-////Console.WriteLine($"Triplet2: {weierstrassCurve.Add(weierstrassCurve.Mult(point1, 74), weierstrassCurve.Mult(point2, 15))}");
+//////// hareTriplet: 118 * P + 67 * Q
+//////// turtleTriplet: 74 * P + 15 * Q
+//////Console.WriteLine($"Triplet1: {weierstrassCurve.Add(weierstrassCurve.Mult(point1, 118), weierstrassCurve.Mult(point2, 67))}");
+//////Console.WriteLine($"Triplet2: {weierstrassCurve.Add(weierstrassCurve.Mult(point1, 74), weierstrassCurve.Mult(point2, 15))}");
 
-////BigInteger N = ord;
-////BigInteger ui = 118;
-////BigInteger vi = 67;
-////BigInteger uj = 74;
-////BigInteger vj = 15;
-////BigInteger gcd = BigIntHelper.GCD(N, ModuloHelper.Abs(vj - vi, N), out _, out _);
-////Console.WriteLine($"gcd(vj - vi , N) = gcd( {vj - vi},  {N}) = {gcd}");
-////BigInteger modulo = N / gcd;
-////BigInteger v = ModuloHelper.Abs(vj - vi, N) / gcd;
-
-
-//////BigInteger diff = vj - vi;
-//////BigInteger diffAbs = BigInteger.Abs(diff);
-//////BigInteger diffAbsMod1 = ModuloHelper.Abs(diff, N); // curve order
-//////BigInteger diffAbsMod2 = ModuloHelper.Abs(diff, BigIntHelper.GCD(N, diff, out _, out _)); // gcd(N, diff)
-//////BigInteger diffAbsMod3 = ModuloHelper.Abs(diff, BigIntHelper.GCD(N, diffAbs, out _, out _)); // gcd(N, diffAbs)
+//////BigInteger N = ord;
+//////BigInteger ui = 118;
+//////BigInteger vi = 67;
+//////BigInteger uj = 74;
+//////BigInteger vj = 15;
+//////BigInteger gcd = BigIntHelper.GCD(N, ModuloHelper.Abs(vj - vi, N), out _, out _);
+//////Console.WriteLine($"gcd(vj - vi , N) = gcd( {vj - vi},  {N}) = {gcd}");
+//////BigInteger modulo = N / gcd;
+//////BigInteger v = ModuloHelper.Abs(vj - vi, N) / gcd;
 
 
+////////BigInteger diff = vj - vi;
+////////BigInteger diffAbs = BigInteger.Abs(diff);
+////////BigInteger diffAbsMod1 = ModuloHelper.Abs(diff, N); // curve order
+////////BigInteger diffAbsMod2 = ModuloHelper.Abs(diff, BigIntHelper.GCD(N, diff, out _, out _)); // gcd(N, diff)
+////////BigInteger diffAbsMod3 = ModuloHelper.Abs(diff, BigIntHelper.GCD(N, diffAbs, out _, out _)); // gcd(N, diffAbs)
 
 
-////Console.WriteLine($"modulo: {modulo}");
-////Console.WriteLine($"v: {v} -> inv: {ModuloHelper.MultInverse(v, modulo)}");
-////Console.WriteLine($"Calculations (v): {ModuloHelper.Abs((ui - uj) * ModuloHelper.MultInverse(v, modulo), modulo)}");
 
-////Console.WriteLine($"Mult inv: vj - vi = {vj - vi} = {ModuloHelper.Abs(vj - vi, modulo)} -> {ModuloHelper.MultInverse(vj - vi, modulo)}");
 
-////Console.WriteLine($"Check: vj - vi = {ModuloHelper.Abs(ModuloHelper.MultInverse(vj - vi, modulo) * ModuloHelper.Abs(vj - vi, modulo), modulo)}");
-////Console.WriteLine($"Calculations: {ModuloHelper.Abs((ui - uj) * ModuloHelper.MultInverse(vj - vi, modulo), modulo)}");
-////Console.WriteLine($"Calculations with point ord: {ModuloHelper.Abs((ui - uj) * ModuloHelper.MultInverse(vj - vi, point1Order), point1Order)}");
-////Console.WriteLine($"Mod inv: {vj - vi} === {ModuloHelper.Abs(vj - vi, modulo)} -> {ModuloHelper.MultInverse(vj - vi, modulo)}");
+//////Console.WriteLine($"modulo: {modulo}");
+//////Console.WriteLine($"v: {v} -> inv: {ModuloHelper.MultInverse(v, modulo)}");
+//////Console.WriteLine($"Calculations (v): {ModuloHelper.Abs((ui - uj) * ModuloHelper.MultInverse(v, modulo), modulo)}");
+
+//////Console.WriteLine($"Mult inv: vj - vi = {vj - vi} = {ModuloHelper.Abs(vj - vi, modulo)} -> {ModuloHelper.MultInverse(vj - vi, modulo)}");
+
+//////Console.WriteLine($"Check: vj - vi = {ModuloHelper.Abs(ModuloHelper.MultInverse(vj - vi, modulo) * ModuloHelper.Abs(vj - vi, modulo), modulo)}");
+//////Console.WriteLine($"Calculations: {ModuloHelper.Abs((ui - uj) * ModuloHelper.MultInverse(vj - vi, modulo), modulo)}");
+//////Console.WriteLine($"Calculations with point ord: {ModuloHelper.Abs((ui - uj) * ModuloHelper.MultInverse(vj - vi, point1Order), point1Order)}");
+//////Console.WriteLine($"Mod inv: {vj - vi} === {ModuloHelper.Abs(vj - vi, modulo)} -> {ModuloHelper.MultInverse(vj - vi, modulo)}");
 
 
 
@@ -226,27 +237,25 @@ PerformanceEvaluator evaluator = new PerformanceEvaluator();
 ////);
 
 //////DLPMethod method = new LasVegasc(weierstrassCurve);
-//PollardRho method = new PollardRho(weierstrassCurve);
+//PohligHellman method = new PohligHellman(weierstrassCurve, new PollardRho(weierstrassCurve));
 
 ////Point point1 = weierstrassCurve.GetRandomPoint();
 //////BigInteger point1Order = weierstrassCurve.GetPointOrder(point1);
 ////BigInteger expectedK = BigIntHelper.Random(1, weierstrassCurve.Order());
 ////Point point2 = weierstrassCurve.Mult(point1, expectedK);
 
-//Console.WriteLine((int)ModuloHelper.Abs(6, 3));
-//Console.WriteLine("");
 //var stopwatch = Stopwatch.StartNew();
 //BigInteger k = method.Solve(point1, point2);
 //stopwatch.Stop();
 //double timeUsed = stopwatch.ElapsedMilliseconds;
 
-//method.EnableNegationMaps(false);
+//(method.supportMethod as PollardRho).EnableNegationMaps(false);
 //stopwatch = Stopwatch.StartNew();
 //BigInteger k2 = method.Solve(point1, point2);
 //stopwatch.Stop();
 //double timeUsed2 = stopwatch.ElapsedMilliseconds;
 
-//method.EnableNegationMaps(true);
+//(method.supportMethod as PollardRho).EnableNegationMaps(true);
 //stopwatch = Stopwatch.StartNew();
 //BigInteger k3 = method.Solve(point1, point2);
 //stopwatch.Stop();
@@ -261,4 +270,43 @@ PerformanceEvaluator evaluator = new PerformanceEvaluator();
 //Console.WriteLine($"Time used with extended negation maps (ms): {timeUsed3}");
 //Console.WriteLine($"Check: kP={weierstrassCurve.Mult(point1, k)}");
 
+
+namespace WeierstrassCurveTest
+{
+    internal static class Program
+    {
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new UI.UserInterface());
+        }
+    }
+}
+
+// 33554393,9009612,6665445,33557160,13009175,26555960,645330,11394644,15429475,215110,490359,13952568,12038366,7563459
+// Input: P (10576835; 32835241)  and Q (22880805; 24203993)
+// Comparing rabbit ( ((2144818; 27586258), 1, 1) )  and tutrle ( ((2144818; 27586258), 1, 0) )
+
+//for (int i = 0; i < 100; i++)
+//{
+
+//var c = new WeierstrassCurve(9009612, 6665445, 33554393, 7);
+//var pp = new Point(10576835, 32835241);
+//var qq = new Point(22880805, 24203993);
+
+//////13234374
+////// 20320019
+////// 33554393
+//var m = new PollardRho(c);
+
+//Console.WriteLine($"P: {pp}, ord - {c.GetPointOrder(pp)}");
+//Console.WriteLine($"2P: {c.Mult(pp, 2)}");
+//Console.WriteLine($"Q: {qq}, ord - {c.GetPointOrder(qq)}, on curve - {c.TestPoint(qq)}");
+//Console.WriteLine($"rabbit: {c.Add(c.Mult(pp, 1), c.Mult(qq, 1))}");
+//Console.WriteLine($"tutrle: {c.Add(c.Mult(pp, 1), c.Mult(qq, 2))}");
+
+//Console.WriteLine($"k: {m.Solve(pp, qq)}");
+//}
 

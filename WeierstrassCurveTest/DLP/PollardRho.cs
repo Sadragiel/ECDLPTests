@@ -1,8 +1,10 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using WeierstrassCurveTest.EllipticCurves;
 using WeierstrassCurveTest.Types;
 using WeierstrassCurveTest.Utils;
 
+using Point = WeierstrassCurveTest.Types.Point; 
 using ArgumentsList = System.Collections.Generic.List<System.Tuple<System.Numerics.BigInteger, System.Numerics.BigInteger, System.Numerics.BigInteger>>;
 using Triplet = System.Tuple<WeierstrassCurveTest.Types.Point, System.Numerics.BigInteger, System.Numerics.BigInteger>;
 
@@ -21,9 +23,6 @@ namespace WeierstrassCurveTest.DLP
         ArgumentsList argumentsList;
         List<Point> pointsList;
 
-        bool negationMapEnabled;
-        bool extendedNegationMapEnabled;
-
         public PollardRho(EllipticCurve curve) : base(curve)
         {
             //argumentsList =
@@ -32,76 +31,78 @@ namespace WeierstrassCurveTest.DLP
             //    new Tuple<BigInteger, BigInteger, BigInteger>(2, 0, 0),
             //    new Tuple<BigInteger, BigInteger, BigInteger>(1, 0, 1),
             //];
-            argumentsList = new ArgumentsList();
-            pointsList = new List<Point>();
-
-            // argumentsList[numberOfSubgroups] is the pair of arguments of a startign point P0
-            for (int i = 0; i <= numberOfSubgroups; i++)
-            {
-                BigInteger a, b;
-                do
-                {
-                    a = GetRandomArgument();
-                    b = GetRandomArgument();
-                } while (argumentsList.FindIndex((tuple) => tuple.Item2 == a && tuple.Item3 == b) != -1);
-
-                argumentsList.Add(new Tuple<BigInteger, BigInteger, BigInteger>(1, a, b));
-            }
+            SetArgumentLists();
 
         }
 
-        public void EnableNegationMaps(bool extended)
+        public override void SetModulo(BigInteger modulo)
         {
-            negationMapEnabled = true;
-            extendedNegationMapEnabled = extended;
+            this.modulo = modulo;
+            SetArgumentLists();
         }
 
         public override BigInteger Solve(Point P, Point Q)
         {
-            // filling up points list in order to avoid recalculations
-            foreach (Tuple<BigInteger, BigInteger, BigInteger> arguments in argumentsList)
+            var itterationLimit = 3 * BigIntHelper.Sqrt(curve.Order());
+
+            Console.WriteLine($"negationMapEnabled = {negationMapEnabled}; extendedNegationMapEnabled = {extendedNegationMapEnabled}");
+
+            while (true)
             {
-                pointsList.Add(curve.Add(curve.Mult(P, arguments.Item2), curve.Mult(Q, arguments.Item3)));
-            }
+                //Console.WriteLine($"Input: P {P}  and Q {Q} ");
 
-            // piecewise-defined mapping function F(V) = V + ai * P + bi * Q
-            // arguments ai and bi:
-
-            // starting point
-
-            var pair0 = argumentsList[numberOfSubgroups];
-            var P0 = pointsList[numberOfSubgroups];
-
-            Triplet hareTriplet = new Triplet(P0, pair0.Item2, pair0.Item3);
-
-            for (int i = 1; true; i *= 2)
-            {
-                Triplet turtleTriplet = hareTriplet;
-
-                for (int j = i + 1; j <= i * 2 + 1; j++)
+                // filling up points list in order to avoid recalculations
+                foreach (Tuple<BigInteger, BigInteger, BigInteger> arguments in argumentsList)
                 {
-                    turtleTriplet = IncrementTriplet(turtleTriplet, P, Q);
-
-                    // checking for collision
-                    Tuple<int, int> colisionSearchResult = CollisionCheck(hareTriplet, turtleTriplet);
-                    if (colisionSearchResult != null)
-                    {
-                        //Console.WriteLine($"Collision solved on itteration ({j}): P{i} == P{j}");
-                        var k = CollisionSolve(hareTriplet, turtleTriplet, colisionSearchResult);
-
-                        if (k != 0)
-                        {
-                            iterationsCount = j;
-                            return k;
-                        }
-                        foundWithExtendedNegationMap = false;
-                        foundWithNegationMap = false;
-                    }
+                    pointsList.Add(curve.Add(curve.Mult(P, arguments.Item2), curve.Mult(Q, arguments.Item3)));
                 }
-                hareTriplet = turtleTriplet;
+
+                // piecewise-defined mapping function F(V) = V + ai * P + bi * Q
+                // arguments ai and bi:
+
+                // starting point
+
+                var pair0 = argumentsList[numberOfSubgroups];
+                var P0 = pointsList[numberOfSubgroups];
+
+                Triplet hareTriplet = new Triplet(P0, pair0.Item2, pair0.Item3);
+
+                for (int i = 1; true; i *= 2)
+                {
+                    Triplet turtleTriplet = hareTriplet;
+
+                    for (int j = i + 1; j <= i * 2 + 1; j++)
+                    {
+                        turtleTriplet = IncrementTriplet(turtleTriplet, P, Q);
+
+                        // checking for collision
+                        Tuple<int, int> colisionSearchResult = CollisionCheck(hareTriplet, turtleTriplet);
+                        //Console.WriteLine($"Comparing rabbit ( {hareTriplet} )  and tutrle ( {turtleTriplet} )");
+                        if (colisionSearchResult != null)
+                        {
+                            //Console.WriteLine($"Collision solved on itteration ({j}): P{i} == P{j}");
+                            var k = CollisionSolve(hareTriplet, turtleTriplet, colisionSearchResult);
+
+                            if (k != 0)
+                            {
+                                iterationsCount += j;
+                                return k;
+                            }
+                            foundWithExtendedNegationMap = false;
+                            foundWithNegationMap = false;
+                        }
+                    }
+
+                    if (i > itterationLimit)
+                    {
+                        break;
+                    }
+
+                    hareTriplet = turtleTriplet;
+                }
+
+                SetArgumentLists();
             }
-            NotifyNoSolution();
-            return 0;
         }
 
         private Triplet IncrementTriplet(Triplet triplet, Point P, Point Q)
@@ -122,7 +123,7 @@ namespace WeierstrassCurveTest.DLP
             BigInteger u = argumentPair.Item2 + triplet.Item2 ;
             BigInteger v = argumentPair.Item3 + triplet.Item3 ;
 
-            return new Triplet(incrementedPoint, ModuloHelper.Abs(u, curve.Order()), ModuloHelper.Abs(v, curve.Order()));
+            return new Triplet(incrementedPoint, ModuloHelper.Abs(u, modulo), ModuloHelper.Abs(v, modulo));
         }
 
         // This function returns tuple (sign, multiplier) which will be used in dinding discrete logarithm,
@@ -185,7 +186,7 @@ namespace WeierstrassCurveTest.DLP
             // k = (ui -+ uj) / (vj -+ vi) mod(N / gcd(N, vj -+ vi))
             int sign = colisionSearchResult.Item1;
             int multiplier = colisionSearchResult.Item2;
-            BigInteger N = curve.Order();
+            BigInteger N = this.modulo;
             BigInteger ui = hareTriplet.Item2 * multiplier;
             BigInteger vi = hareTriplet.Item3 * multiplier;
             BigInteger uj = turtleTriplet.Item2 * sign * multiplier;
@@ -200,6 +201,9 @@ namespace WeierstrassCurveTest.DLP
 
             if (BigIntHelper.GCD(v, modulo, out _, out _) > 1)
             {
+                //Console.WriteLine($"We found anti-collision! ");
+                //Console.WriteLine($"N: {N}; gcd: {gcd}; modulo: {modulo}");
+                //Console.WriteLine($"vi: {vi}; vj: {vj}; v: {v}; gcd(v, modulo): {BigIntHelper.GCD(v, modulo, out _, out _)}");
                 return 0; // anti-collision, The collision information is not sufficient to solve k uniquely 
             }
 
@@ -212,6 +216,31 @@ namespace WeierstrassCurveTest.DLP
             return ModuloHelper.Abs(u * ModuloHelper.MultInverse(v, modulo), N);
         }
 
+        private void SetArgumentLists()
+        {
+
+            argumentsList = new ArgumentsList();
+            pointsList = new List<Point>();
+
+            numberOfSubgroups = (int)BigInteger.Min(numberOfSubgroups, modulo * modulo - 2); // excluding (0, 0)
+            //Console.WriteLine($"Searching for {numberOfSubgroups + 1} arguments ");
+
+            // argumentsList[numberOfSubgroups] is the pair of arguments of a startign point P0
+            for (int i = 0; i <= numberOfSubgroups; i++)
+            {
+                BigInteger a, b;
+                do
+                {
+                    a = GetRandomArgument();
+                    b = GetRandomArgument();
+                    //Console.WriteLine($"a = {a}; b = {b}; ind = {argumentsList.FindIndex((tuple) => tuple.Item2 == a && tuple.Item3 == b)}");
+                } while ((a == 0 && b == 0) || argumentsList.FindIndex((tuple) => tuple.Item2 == a && tuple.Item3 == b) != -1);
+
+                argumentsList.Add(new Tuple<BigInteger, BigInteger, BigInteger>(1, a, b));
+            }
+            //Console.WriteLine("Found arguments");
+        }
+
         private int GetSubgroupNumber(Point P)
         {
             return (int)ModuloHelper.Abs(P.GetHashCode(), numberOfSubgroups);
@@ -219,7 +248,7 @@ namespace WeierstrassCurveTest.DLP
 
         private BigInteger GetRandomArgument()
         {
-            return BigIntHelper.Random(1, curve.Order());
+            return BigIntHelper.Random(0, modulo);
         }
     }
 }

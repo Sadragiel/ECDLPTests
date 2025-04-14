@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="WeierstrassCurveTest.DLP.DLPMethod" Collapsed="true">
+    <Position X="10" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAIAACAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>DLP\DLPMethod.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.DLP.PollardRho" Collapsed="true">
+    <Position X="10" Y="0.5" Width="1.5" />
+    <InheritanceLine Type="WeierstrassCurveTest.DLP.DLPMethod" ManuallyRouted="true">
+      <Path>
+        <Point X="10.75" Y="1.5" />
+        <Point X="10.75" Y="1.191" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>EAAAAAAARIAABAAAIBAAAAAIAAAAAAACBAAAACBIIAA=</HashCode>
+      <FileName>DLP\PollardRho.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.EllipticCurves.EllipticCurve" Collapsed="true">
+    <Position X="8" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAMAAEABAAAAABAAAAAAAAACAAAGAAgAAEAACAAAAAA=</HashCode>
+      <FileName>EllipticCurves\EllipticCurve.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.EllipticCurves.WeierstrassCurve" Collapsed="true">
+    <Position X="8" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAICAAAAAAAQAAAAAAAAAAAAAQAGAAggAQAAAAAAAIA=</HashCode>
+      <FileName>EllipticCurves\WeierstrassCurve.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.Performance.Interfaces.DatastItem" Collapsed="true">
+    <Position X="8.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAFAAgAAAAQAAAAAAAAAQBAAACABAAAAgAQAAg=</HashCode>
+      <FileName>Performance\Interfaces\DatastItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.Performance.DataProvider">
+    <Position X="12.25" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAgACAAAAAAAAAAAAAAAAAAIAAAAAACAAIAA=</HashCode>
+      <FileName>Performance\DataProvider.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.Performance.PerformanceEvaluator">
+    <Position X="14" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAFIIAAAgAAgCAAAAAAAIAAAAAAgAAAAE=</HashCode>
+      <FileName>Performance\PerformanceEvaluator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.Types.Point" Collapsed="true">
+    <Position X="8.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEgAAAAAAABAAAAIAAAABoAAAEAAA=</HashCode>
+      <FileName>Types\Point.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.Utils.BigIntHelper">
+    <Position X="17.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAQAAAAAACAQABAAAAAQEAAAAIAA=</HashCode>
+      <FileName>Utils\BigIntHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.Utils.ModuloHelper">
+    <Position X="15.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAIAAAAAAAAABAAABAAAAAAAAAA=</HashCode>
+      <FileName>Utils\ModuloHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -9,7 +9,6 @@ namespace WeierstrassCurveTest.EllipticCurves
         private BigInteger a;
         private BigInteger b;
 
-        public List<Point> pointsOnAbscissaAxis = new List<Point>();
 
         public WeierstrassCurve(BigInteger a, BigInteger b, BigInteger p, BigInteger order) { 
             this.a = ModuloHelper.Abs(a, p);
@@ -18,7 +17,7 @@ namespace WeierstrassCurveTest.EllipticCurves
             this.order = order;
         }
 
-        public override bool TestPoint(Point A)
+        public override bool TestPoint(Types.Point A)
         {
             // y^2 = x^3 + ax + b  mod(p)
             BigInteger left = ModuloHelper.Abs(A.y * A.y, p);
@@ -26,7 +25,7 @@ namespace WeierstrassCurveTest.EllipticCurves
             return left.Equals(right);
         }
 
-        public override Point GetRandomPoint()
+        public override Types.Point GetRandomPoint()
         {
             while(true)
             {
@@ -35,7 +34,7 @@ namespace WeierstrassCurveTest.EllipticCurves
                     BigInteger x = BigIntHelper.Random(0, p);
                     BigInteger quadraticResiduosity = ModuloHelper.Abs(BigInteger.Pow(x, 3) + this.a * x + this.b, p);
                     BigInteger y = ModuloHelper.SquareRootMod(quadraticResiduosity, p);
-                    return new Point(x, y);
+                    return new Types.Point(x, y);
                 }
                 catch (Exception e)
                 {
@@ -44,7 +43,7 @@ namespace WeierstrassCurveTest.EllipticCurves
             }
         }
 
-        public override Point Add(Point A, Point B)
+        public override Types.Point Add(Types.Point A, Types.Point B)
         {
             // Handle Doubling
             if (A.Equals(B))
@@ -65,7 +64,7 @@ namespace WeierstrassCurveTest.EllipticCurves
 
             // A - A = 0
             if (A.x.Equals(B.x)) {
-                return Point.getPointAtInfinity();
+                return Types.Point.getPointAtInfinity();
             }
 
             // lambda = (y2 - y1) / (x2 - x1)
@@ -74,11 +73,11 @@ namespace WeierstrassCurveTest.EllipticCurves
             return CalculatePoint(lambda, A, B);
         }
 
-        public override Point Double(Point A)
+        public override Types.Point Double(Types.Point A)
         {
             if (A.atInfinity || A.y.Equals(0))
             {
-                return Point.getPointAtInfinity();
+                return Types.Point.getPointAtInfinity();
             }
 
             // lambda = (3x^2 + a) / (2y)
@@ -87,17 +86,12 @@ namespace WeierstrassCurveTest.EllipticCurves
             return CalculatePoint(lambda, A, A);
         }
 
-        public void setPointsWithYZero(List<Point> pointsOnAbscissaAxis)
-        {
-            this.pointsOnAbscissaAxis = pointsOnAbscissaAxis;
-        }
-
-        private Point CalculatePoint(BigInteger lambda, Point A, Point B)
+        private Types.Point CalculatePoint(BigInteger lambda, Types.Point A, Types.Point B)
         {
             BigInteger x = ModuloHelper.Abs(BigInteger.ModPow(lambda, 2, p) - A.x - B.x, p);
             BigInteger y = ModuloHelper.Abs(lambda * (A.x - x) - A.y, p);
 
-            return new Point(x, y);
+            return new Types.Point(x, y);
         }
     }
 }
