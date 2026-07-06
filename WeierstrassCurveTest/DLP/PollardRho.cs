@@ -13,11 +13,6 @@ namespace WeierstrassCurveTest.DLP
 {
     internal class PollardRho : DLPMethod
     {
-        // Metadata:
-        public int iterationsCount = 0;
-        public bool foundWithNegationMap = false;
-        public bool foundWithExtendedNegationMap = false;
-
         int numberOfSubgroups = 20;
 
         ArgumentsList argumentsList;
@@ -45,7 +40,7 @@ namespace WeierstrassCurveTest.DLP
         {
             var itterationLimit = 3 * BigIntHelper.Sqrt(curve.Order());
 
-            Console.WriteLine($"negationMapEnabled = {negationMapEnabled}; extendedNegationMapEnabled = {extendedNegationMapEnabled}");
+            //Console.WriteLine($"negationMapEnabled = {negationMapEnabled}; extendedNegationMapEnabled = {extendedNegationMapEnabled}");
 
             while (true)
             {

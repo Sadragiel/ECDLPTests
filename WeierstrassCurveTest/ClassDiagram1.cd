@@ -1,80 +1,193 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="WeierstrassCurveTest.DLP.DLPMethod" Collapsed="true">
-    <Position X="10" Y="1.5" Width="1.5" />
+  <Class Name="WeierstrassCurveTest.DLP.BSGS" Collapsed="true">
+    <Position X="1" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAIAACAAAAAAAAACAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DLP\BSGS.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.DLP.DLPMethod" Collapsed="true">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAgAAABAAAAAIAACAAAAABAAACCBIIAg=</HashCode>
       <FileName>DLP\DLPMethod.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="WeierstrassCurveTest.DLP.PollardRho" Collapsed="true">
-    <Position X="10" Y="0.5" Width="1.5" />
-    <InheritanceLine Type="WeierstrassCurveTest.DLP.DLPMethod" ManuallyRouted="true">
-      <Path>
-        <Point X="10.75" Y="1.5" />
-        <Point X="10.75" Y="1.191" />
-      </Path>
-    </InheritanceLine>
+  <Class Name="WeierstrassCurveTest.DLP.GrumpyGiants" Collapsed="true">
+    <Position X="5.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>EAAAAAAARIAABAAAIBAAAAAIAAAAAAACBAAAACBIIAA=</HashCode>
+      <HashCode>AAAAAAAAAAAIAAAAAAAAAAEIAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DLP\GrumpyGiants.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.DLP.Kangaroo" Collapsed="true">
+    <Position X="7.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>RAAAAABAAAAIAABEAAAAABQIAAAAAAAoAQQABQAAAAA=</HashCode>
+      <FileName>DLP\Kangaroo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.DLP.LasVegasc" Collapsed="true">
+    <Position X="10" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAAABCAICCAAAAAABAKCAAAAIAA=</HashCode>
+      <FileName>DLP\LasVegas.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.DLP.PohligHellman" Collapsed="true">
+    <Position X="12.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAgAAICBAAAAAAAAAAAAAAoAA=</HashCode>
+      <FileName>DLP\PohligHellman.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.DLP.PollardRho" Collapsed="true">
+    <Position X="3.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAARIAIBAAAIAAAAAAIAAAAAAACAAAAAABAAAA=</HashCode>
       <FileName>DLP\PollardRho.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="WeierstrassCurveTest.EllipticCurves.EllipticCurve" Collapsed="true">
-    <Position X="8" Y="0.5" Width="1.5" />
+  <Class Name="WeierstrassCurveTest.EllipticCurves.EdwardsCurve" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAMAAEABAAAAABAAAAAAAAACAAAGAAgAAEAACAAAAAA=</HashCode>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAGAAgEAAAAAAAAAAA=</HashCode>
+      <FileName>EllipticCurves\EdwardsCurve.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.EllipticCurves.EllipticCurve" Collapsed="true">
+    <Position X="1.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAMCAEABAAAAABAAAAAAAAACAAAGAAgAAEAACAAAAIA=</HashCode>
       <FileName>EllipticCurves\EllipticCurve.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WeierstrassCurveTest.EllipticCurves.WeierstrassCurve" Collapsed="true">
-    <Position X="8" Y="1.25" Width="1.5" />
+    <Position X="2.75" Y="4.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAICAAAAAAAQAAAAAAAAAAAAAQAGAAggAQAAAAAAAIA=</HashCode>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAQAGAAggAQAAAAAAAAA=</HashCode>
       <FileName>EllipticCurves\WeierstrassCurve.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WeierstrassCurveTest.Performance.Interfaces.DatastItem" Collapsed="true">
-    <Position X="8.75" Y="3.25" Width="1.5" />
+    <Position X="18.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAFAAgAAAAQAAAAAAAAAQBAAACABAAAAgAQAAg=</HashCode>
       <FileName>Performance\Interfaces\DatastItem.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="WeierstrassCurveTest.Performance.DataProvider">
-    <Position X="12.25" Y="1.25" Width="1.5" />
+  <Class Name="WeierstrassCurveTest.Performance.DataProvider" Collapsed="true">
+    <Position X="16.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>EAAAAAAAAgACAAAAAAAAAAAAAAAAAAIAAAAAACAAIAA=</HashCode>
+      <HashCode>EAAQAAAAAgACAAAAAAAAAAAAAAAAAEIAAAAAACAAIAA=</HashCode>
       <FileName>Performance\DataProvider.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="WeierstrassCurveTest.Performance.PerformanceEvaluator">
-    <Position X="14" Y="1.25" Width="1.5" />
+  <Class Name="WeierstrassCurveTest.Performance.PerformanceEvaluator" Collapsed="true">
+    <Position X="20" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAFIIAAAgAAgCAAAAAAAIAAAAAAgAAAAE=</HashCode>
+      <HashCode>EQAAAAQAAAAAFIIAAAgAIgCAAAAAAAIAAAAAAgAAAAE=</HashCode>
       <FileName>Performance\PerformanceEvaluator.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WeierstrassCurveTest.Types.Point" Collapsed="true">
-    <Position X="8.75" Y="2.5" Width="1.5" />
+    <Position X="14.75" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAEgAAAAAAABAAAAIAAAABoAAAEAAA=</HashCode>
       <FileName>Types\Point.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="WeierstrassCurveTest.Utils.BigIntHelper">
-    <Position X="17.5" Y="1.25" Width="1.5" />
+  <Class Name="WeierstrassCurveTest.UI.UIBulkTestTabManager" Collapsed="true">
+    <Position X="20" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>UI\UIBulkTestTabManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.UI.UISingleTestTabManager" Collapsed="true">
+    <Position X="14.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UI\UISingleTestTabManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.UI.UITabManager" Collapsed="true">
+    <Position X="16.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAQAAAAAAAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>UI\UITabManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.UI.UserInterface" Collapsed="true">
+    <Position X="18.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>/ySDI8m8Ei5QkJwksCDCCAJDBDMMgUZAJ6IAhAIAATA=</HashCode>
+      <FileName>UI\UserInterface.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.Utils.BigIntHelper" Collapsed="true">
+    <Position X="14.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAgAAAAAAAAAAAQAAAAAACAQABAAAAAQEAAAAIAA=</HashCode>
       <FileName>Utils\BigIntHelper.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="WeierstrassCurveTest.Utils.ModuloHelper">
-    <Position X="15.75" Y="1.25" Width="1.5" />
+  <Class Name="WeierstrassCurveTest.Utils.LargeListExtensions" Collapsed="true">
+    <Position X="14.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utils\LargeList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.Utils.LargeList&lt;T&gt;" Collapsed="true">
+    <Position X="20" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAEgAAABAAAgECAAAAAQAAAAIAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Utils\LargeList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.Utils.MatrixHelper" Collapsed="true">
+    <Position X="16.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAIAAAAAAEAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Utils\MatrixHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.Utils.ModuloHelper" Collapsed="true">
+    <Position X="18.25" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAgAIAAAAAAAAABAAABAAAAAAAAAA=</HashCode>
       <FileName>Utils\ModuloHelper.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="WeierstrassCurveTest.Utils.TestingUtils" Collapsed="true">
+    <Position X="18.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utils\TestingUtils.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WeierstrassCurveTest.Program" Collapsed="true">
+    <Position X="16.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="WeierstrassCurveTest.Performance.CurveName" Collapsed="true">
+    <Position X="14.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Performance\PerformanceEvaluator.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="WeierstrassCurveTest.Performance.MethodName" Collapsed="true">
+    <Position X="16.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAgAAAAAAAAAAAAAAAAEEAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Performance\PerformanceEvaluator.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

@@ -272,6 +272,7 @@ namespace WeierstrassCurveTest.UI
 
                 data.point1_x = BigInteger.Parse(PxValue.Text);
                 data.point1_y = BigInteger.Parse(PyValue.Text);
+                data.point1_order = BigInteger.Parse(curveOrderValue.Text);
                 data.point2_x = BigInteger.Parse(QxValue.Text);
                 data.point2_y = BigInteger.Parse(QyValue.Text);
 

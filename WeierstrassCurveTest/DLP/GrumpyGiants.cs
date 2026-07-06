@@ -11,17 +11,21 @@ namespace WeierstrassCurveTest.DLP
     {
         BigInteger multInvToTwo;
 
-        public GrumpyGiants(EllipticCurve curve) : base(curve)
+        public GrumpyGiants(EllipticCurve curve) : base(curve) { }
+
+        public override void SetModulo(BigInteger modulo)
         {
-            multInvToTwo = ModuloHelper.MultInverse(2, curve.Order());
+            this.modulo = modulo;
+            multInvToTwo = ModuloHelper.MultInverse(2, modulo);
         }
 
         public override BigInteger Solve(Point P, Point Q)
         {
+            iterationsCount = 0;
+
             // Params
-            BigInteger N = curve.Order();
             int n = 1;
-            int m = (int)Math.Ceiling(Math.Sqrt((double)N / 2.0));
+            int m = (int)Math.Ceiling(Math.Sqrt((double)modulo/* / 2.0*/));
 
             // Baby Steps: { P + inP }
             List <Point> babySteps = new List<Point> { P };
@@ -50,43 +54,44 @@ namespace WeierstrassCurveTest.DLP
                 // k = 1 + in - jm
                 if (j != -1)
                 {
-                    return ModuloHelper.Abs(1 + i * n - j * m, N);
+                    return ModuloHelper.Abs(1 + i * n - j * m, modulo);
                 }
 
                 j = giant2Steps.IndexOf(newBaby);
                 // k = (1 + in + jm + j) * MultInv(2, N)
                 if (j != -1)
                 {
-                    return ModuloHelper.Abs((1 + i * n + j * m + j) * multInvToTwo, N);
+                    return ModuloHelper.Abs((1 + i * n + j * m + j) * multInvToTwo, modulo);
                 }
 
                 j = babySteps.IndexOf(newGiant1);
                 // k = 1 + jn - im
                 if (j != -1)
                 {
-                    return ModuloHelper.Abs(1 + j * n - i * m, N);
+                    return ModuloHelper.Abs(1 + j * n - i * m, modulo);
                 }
 
                 j = giant2Steps.IndexOf(newGiant1);
                 // k = im + jm + j
                 if (j != -1)
                 {
-                    return ModuloHelper.Abs(i * m + j * m + j, N);
+                    return ModuloHelper.Abs(i * m + j * m + j, modulo);
                 }
 
                 j = babySteps.IndexOf(newGiant2);
                 // k = (1 + jn + im + i) * MultInv(2, N)
                 if (j != -1)
                 {
-                    return ModuloHelper.Abs((1 + j * n + i * m + i) * multInvToTwo, N);
+                    return ModuloHelper.Abs((1 + j * n + i * m + i) * multInvToTwo, modulo);
                 }
 
                 j = giant1Steps.IndexOf(newGiant2);
                 // k = jm + im + i
                 if (j != -1)
                 {
-                    return ModuloHelper.Abs(j * m + i * m + i, N);
+                    return ModuloHelper.Abs(j * m + i * m + i, modulo);
                 }
+                iterationsCount++;
             }
 
             NotifyNoSolution();

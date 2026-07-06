@@ -74,10 +74,10 @@
             ResultText = new Label();
             ResultTextError = new Label();
             BulkTest = new TabPage();
-            ProccessingGroup = new GroupBox();
             BulkResultsBlock = new GroupBox();
             BulkResultText = new Label();
             BulkResultTextError = new Label();
+            ProccessingGroup = new GroupBox();
             TotalItemsLabel = new Label();
             label30 = new Label();
             panelChart = new Panel();
@@ -115,8 +115,8 @@
             groupBox3.SuspendLayout();
             resultsGroupBlock.SuspendLayout();
             BulkTest.SuspendLayout();
-            ProccessingGroup.SuspendLayout();
             BulkResultsBlock.SuspendLayout();
+            ProccessingGroup.SuspendLayout();
             groupBox8.SuspendLayout();
             MethodNameGroup.SuspendLayout();
             CurveNameGroup.SuspendLayout();
@@ -194,9 +194,9 @@
             label15.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic, GraphicsUnit.Point, 0);
             label15.Location = new Point(7, 49);
             label15.Name = "label15";
-            label15.Size = new Size(466, 17);
+            label15.Size = new Size(376, 17);
             label15.TabIndex = 1;
-            label15.Text = "p, a, b, curve order, P.x, P.y, P order, Q.x, Q.y, Q order, expected k, Y1.x, Y2.x, Y3.x";
+            label15.Text = "p, a, b, curve order, P.x, P.y, P order, Q.x, Q.y, Q order, expected k";
             // 
             // label14
             // 
@@ -598,26 +598,6 @@
             BulkTest.Text = "Bulk Test";
             BulkTest.UseVisualStyleBackColor = true;
             // 
-            // ProccessingGroup
-            // 
-            ProccessingGroup.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            ProccessingGroup.Controls.Add(TotalItemsLabel);
-            ProccessingGroup.Controls.Add(label30);
-            ProccessingGroup.Controls.Add(panelChart);
-            ProccessingGroup.Controls.Add(proccessingProgressBar);
-            ProccessingGroup.Controls.Add(proccessingProgressLabel);
-            ProccessingGroup.Controls.Add(label28);
-            ProccessingGroup.Controls.Add(heatingProgressLabel);
-            ProccessingGroup.Controls.Add(label26);
-            ProccessingGroup.Controls.Add(heatingProgressBar);
-            ProccessingGroup.Location = new Point(6, 122);
-            ProccessingGroup.Name = "ProccessingGroup";
-            ProccessingGroup.Size = new Size(625, 425);
-            ProccessingGroup.TabIndex = 1;
-            ProccessingGroup.TabStop = false;
-            ProccessingGroup.Text = "Process";
-            ProccessingGroup.Visible = false;
-            // 
             // BulkResultsBlock
             // 
             BulkResultsBlock.Controls.Add(BulkResultText);
@@ -649,6 +629,26 @@
             BulkResultTextError.TabIndex = 0;
             BulkResultTextError.Text = "ResultErrorText";
             BulkResultTextError.Visible = false;
+            // 
+            // ProccessingGroup
+            // 
+            ProccessingGroup.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            ProccessingGroup.Controls.Add(TotalItemsLabel);
+            ProccessingGroup.Controls.Add(label30);
+            ProccessingGroup.Controls.Add(panelChart);
+            ProccessingGroup.Controls.Add(proccessingProgressBar);
+            ProccessingGroup.Controls.Add(proccessingProgressLabel);
+            ProccessingGroup.Controls.Add(label28);
+            ProccessingGroup.Controls.Add(heatingProgressLabel);
+            ProccessingGroup.Controls.Add(label26);
+            ProccessingGroup.Controls.Add(heatingProgressBar);
+            ProccessingGroup.Location = new Point(6, 122);
+            ProccessingGroup.Name = "ProccessingGroup";
+            ProccessingGroup.Size = new Size(625, 425);
+            ProccessingGroup.TabIndex = 1;
+            ProccessingGroup.TabStop = false;
+            ProccessingGroup.Text = "Process";
+            ProccessingGroup.Visible = false;
             // 
             // TotalItemsLabel
             // 
@@ -767,9 +767,9 @@
             label24.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic, GraphicsUnit.Point, 0);
             label24.Location = new Point(6, 55);
             label24.Name = "label24";
-            label24.Size = new Size(466, 17);
+            label24.Size = new Size(376, 34);
             label24.TabIndex = 2;
-            label24.Text = "p, a, b, curve order, P.x, P.y, P order, Q.x, Q.y, Q order, expected k, Y1.x, Y2.x, Y3.x";
+            label24.Text = "p, a, b, curve order, P.x, P.y, P order, Q.x, Q.y, Q order, expected k\r\n\r\n";
             // 
             // label23
             // 
@@ -973,10 +973,10 @@
             resultsGroupBlock.ResumeLayout(false);
             resultsGroupBlock.PerformLayout();
             BulkTest.ResumeLayout(false);
-            ProccessingGroup.ResumeLayout(false);
-            ProccessingGroup.PerformLayout();
             BulkResultsBlock.ResumeLayout(false);
             BulkResultsBlock.PerformLayout();
+            ProccessingGroup.ResumeLayout(false);
+            ProccessingGroup.PerformLayout();
             groupBox8.ResumeLayout(false);
             groupBox8.PerformLayout();
             MethodNameGroup.ResumeLayout(false);

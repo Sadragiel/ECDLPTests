@@ -13,7 +13,8 @@ namespace WeierstrassCurveTest.DLP
 
         public override BigInteger Solve(Point P, Point Q)
         {
-            BigInteger N = curve.Order();
+            iterationsCount = 0;
+            BigInteger N = modulo;
             // Solution: k = mq - r
             int m = (int)Math.Ceiling(Math.Sqrt((double)N));
 
@@ -37,7 +38,7 @@ namespace WeierstrassCurveTest.DLP
                 if (i != -1)
                 {
                     // k = i + jm (mod N)
-
+                    iterationsCount += j;
                     return ModuloHelper.Abs((i + j * m), N);
                 }
 

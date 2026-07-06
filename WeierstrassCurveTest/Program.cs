@@ -10,7 +10,7 @@ using WeierstrassCurveTest.Utils;
 using Point = WeierstrassCurveTest.Types.Point;
 
 
-//PerformanceEvaluator evaluator = new PerformanceEvaluator();
+//PerformanceEvaluator evaluator = new PerformanceEvaluator(null);
 
 ////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.com-data25.csv");
 ////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg.com-data25.csv");
@@ -19,7 +19,13 @@ using Point = WeierstrassCurveTest.Types.Point;
 ////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.com-data26.csv");
 ////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg.com-data26.csv");
 ////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg-ext.com-data26.csv");
-////evaluator.CalculateAndLogStatistics("v3_Weierstrass_PollardRho.neg-ext.v2-com-data26.csv");
+//Console.WriteLine(evaluator.CalculateAndLogStatistics("v3_Weierstrass_Kangaroo.com-data27.csv"));
+//Console.WriteLine(evaluator.CalculateAndLogStatistics("v3_Weierstrass_Kangaroo.com-data28.csv"));
+//Console.WriteLine(evaluator.CalculateAndLogStatistics("v3_Weierstrass_Kangaroo.com-data29.csv"));
+
+//Console.WriteLine(evaluator.CalculateAndLogStatistics("v3_Weierstrass_LasVegas.com-data28.csv"));
+//Console.WriteLine(evaluator.CalculateAndLogStatistics("v3_Weierstrass_LasVegas.com-data29.csv"));
+//Console.WriteLine(evaluator.CalculateAndLogStatistics("v3_Weierstrass_LasVegas.com-data30.csv"));
 
 ////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.com-data25.csv");
 ////evaluator.CalculateAndLogStatistics("v2_Weierstrass_PollardRho.neg.com-data25.csv");

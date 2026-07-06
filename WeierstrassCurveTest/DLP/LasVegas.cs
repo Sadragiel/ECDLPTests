@@ -20,16 +20,13 @@ namespace WeierstrassCurveTest.DLP
 
         public LasVegasc(EllipticCurve curve) : base(curve)
         {
-            // Modulo is used for operations within field, such as managin matrix
-            mod = curve.Modulo(); 
-            // Order is used for operations on the curve, such as calculating random points
-            ord = curve.Order();
+            SetTunningParams(curve.Order());
+        }
 
-            // Select n' - sum of max degrees of monomials of curve C
-            n_ = BigIntHelper.LogBase2(ord);
-
-            // l = 3n'
-            l = 3 * n_;
+        public override void SetModulo(BigInteger modulo)
+        {
+            this.modulo = modulo;
+            SetTunningParams(modulo);
         }
 
         public override BigInteger Solve(Point P, Point Q)
@@ -45,16 +42,24 @@ namespace WeierstrassCurveTest.DLP
                 // and also, the order of i, j and k should be fixed
                 matrix = new List<List<BigInteger>>(); // resetting matrix on every attempt
 
-                pCoefs = FillTheMatrix(3 * n_ - 1, (BigInteger num) => curve.Mult(P, num));
+                Console.WriteLine("Starting attempt");
+                pCoefs = FillTheMatrix(Math.Max(1, 3 * n_ - 1), (BigInteger num) => curve.Mult(P, num));
+                Console.WriteLine("pCoefs are done");
+                Console.WriteLine($"Calculating q coefs with l={l}; ord={ord}");
                 qCoefs = FillTheMatrix(l + 1, (BigInteger num) => curve.Invert(curve.Mult(Q, num)));
-                
+                Console.WriteLine("qCoefs are done");
+
                 // Extracting left kernel
                 List<List<BigInteger>> transposed = MatrixHelper.TransposeMatrix(matrix);
+                Console.WriteLine("transposed are done");
                 MatrixHelper.RowReduce(transposed, mod);
+                Console.WriteLine("RowReduce are done");
                 List<List<BigInteger>> leftKernel = MatrixHelper.FindKernelBasis(transposed, mod);
+                Console.WriteLine("leftKernel are done");
 
                 // Problem L - in left kernel find a vector with l zeros
                 v = GetRowWithLZeros(leftKernel);
+                Console.WriteLine($"GetRowWithLZeros are done - {v}");
             }
 
 
@@ -98,7 +103,7 @@ namespace WeierstrassCurveTest.DLP
                 // generate new unique random number
                 do
                 {
-                    BigInteger newNumber = BigIntHelper.Random(1, ord);
+                    BigInteger newNumber = BigIntHelper.Random(0, ord);
                     long index = generatedRandomNumbers.FindIndex(x => x == newNumber);
 
                     if (index < 0)
@@ -147,6 +152,26 @@ namespace WeierstrassCurveTest.DLP
             {
                 return row.Count(value => value == 0) >= l;
             });
+        }
+
+        void SetTunningParams(BigInteger modulo)
+        {
+
+            // Modulo is used for operations within field, such as managin matrix
+            mod = curve.Modulo();
+            // Order is used for operations on the curve, such as calculating random points
+            ord = modulo;
+
+            // Select n' - sum of max degrees of monomials of curve C
+            n_ = BigIntHelper.LogBase2(ord);
+            
+
+            // l = 3n'
+            l = 3 * n_;
+            if (l + 1 >= ord)
+            {
+                l = (int)ord - 1;
+            }
         }
     }
 }

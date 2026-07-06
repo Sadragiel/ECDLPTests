@@ -159,9 +159,9 @@ namespace WeierstrassCurveTest.Performance
                                 timeUsed, 
                                 memoryUsed, 
                                 isSolutionFound,
-                                ((method as PohligHellman).supportMethod as PollardRho).iterationsCount,
-                                ((method as PohligHellman).supportMethod as PollardRho).foundWithNegationMap,
-                                ((method as PohligHellman).supportMethod as PollardRho).foundWithExtendedNegationMap
+                                ((method as PohligHellman).supportMethod).iterationsCount,
+                                ((method as PohligHellman).supportMethod).foundWithNegationMap,
+                                ((method as PohligHellman).supportMethod).foundWithExtendedNegationMap
                             );
                         }
                         form.IncrementProccessingProgress();

@@ -28,7 +28,7 @@ namespace WeierstrassCurveTest.DLP
 
             BigInteger N = curve.Order();
             var primeFactors = Factorize(N);
-            //Console.WriteLine("Factorized");
+            //Console.WriteLine($"Factorized {N} ===> {primeFactors}");
 
             List<BigInteger> residues = new List<BigInteger>();
             List<BigInteger> moduli = new List<BigInteger>();

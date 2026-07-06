@@ -15,6 +15,11 @@ namespace WeierstrassCurveTest.DLP
         protected bool negationMapEnabled;
         protected bool extendedNegationMapEnabled;
 
+        // Metadata:
+        public int iterationsCount = 0;
+        public bool foundWithNegationMap = false;
+        public bool foundWithExtendedNegationMap = false;
+
         public DLPMethod(EllipticCurve curve)
         {
             this.curve = curve;
