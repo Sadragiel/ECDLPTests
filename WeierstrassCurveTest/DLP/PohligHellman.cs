@@ -23,20 +23,14 @@ namespace WeierstrassCurveTest.DLP
 
         public override BigInteger Solve(Point P, Point Q)
         {
-            //Console.WriteLine($"Starting Solving PH Input: P {P}  and Q {Q} ");
-
-
             BigInteger N = curve.Order();
             var primeFactors = Factorize(N);
-            //Console.WriteLine($"Factorized {N} ===> {primeFactors}");
 
             List<BigInteger> residues = new List<BigInteger>();
             List<BigInteger> moduli = new List<BigInteger>();
 
             foreach (var (p, e) in primeFactors)
             {
-                //Console.WriteLine($"p={p} e={e}");
-
                 BigInteger x = SolvePrimePower(P, Q, p, e);
                 residues.Add(x);
                 moduli.Add(BigInteger.Pow(p, e));
@@ -117,8 +111,6 @@ namespace WeierstrassCurveTest.DLP
                 Point Qk = curve.Mult(Q_current, BigInteger.Pow(p, e - k - 1));
                 Point Pk = curve.Mult(P0, BigInteger.Pow(p, e - 1));
 
-                //Console.WriteLine($"Known points: P_reduced = {P0}; Qk = {Qk}");
-                //Console.WriteLine($"Result before next calculations: result = {result}; factor = {factor}");
                 BigInteger dk;
                 if (Qk.atInfinity)
                 {
@@ -130,7 +122,7 @@ namespace WeierstrassCurveTest.DLP
                 }
                 else if (curve.Invert(Qk).Equals(Pk))
                 {
-                    dk = pe - 1;
+                    dk = p - 1;
                 }
                 else
                 {

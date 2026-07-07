@@ -20,14 +20,7 @@ namespace WeierstrassCurveTest.DLP
 
         public PollardRho(EllipticCurve curve) : base(curve)
         {
-            //argumentsList =
-            //[
-            //    new Tuple<BigInteger, BigInteger, BigInteger>(1, 1, 0),
-            //    new Tuple<BigInteger, BigInteger, BigInteger>(2, 0, 0),
-            //    new Tuple<BigInteger, BigInteger, BigInteger>(1, 0, 1),
-            //];
             SetArgumentLists();
-
         }
 
         public override void SetModulo(BigInteger modulo)
@@ -38,14 +31,10 @@ namespace WeierstrassCurveTest.DLP
 
         public override BigInteger Solve(Point P, Point Q)
         {
-            var itterationLimit = 3 * BigIntHelper.Sqrt(curve.Order());
-
-            //Console.WriteLine($"negationMapEnabled = {negationMapEnabled}; extendedNegationMapEnabled = {extendedNegationMapEnabled}");
+            var itterationLimit = 3 * BigIntHelper.Sqrt(this.modulo);
 
             while (true)
             {
-                //Console.WriteLine($"Input: P {P}  and Q {Q} ");
-
                 // filling up points list in order to avoid recalculations
                 foreach (Tuple<BigInteger, BigInteger, BigInteger> arguments in argumentsList)
                 {
@@ -72,10 +61,8 @@ namespace WeierstrassCurveTest.DLP
 
                         // checking for collision
                         Tuple<int, int> colisionSearchResult = CollisionCheck(hareTriplet, turtleTriplet);
-                        //Console.WriteLine($"Comparing rabbit ( {hareTriplet} )  and tutrle ( {turtleTriplet} )");
                         if (colisionSearchResult != null)
                         {
-                            //Console.WriteLine($"Collision solved on itteration ({j}): P{i} == P{j}");
                             var k = CollisionSolve(hareTriplet, turtleTriplet, colisionSearchResult);
 
                             if (k != 0)
@@ -134,14 +121,12 @@ namespace WeierstrassCurveTest.DLP
             // same point: P1 == P2
             if (turtleTriplet.Item1.Equals(hareTriplet.Item1))
             {
-                //Console.WriteLine($"same point: P1{turtleTriplet.Item1} == P2{hareTriplet.Item1}");
                 return new Tuple<int, int>(1, 1);
             }
 
             // Negastion map: P1 == -P2
             if (negationMapEnabled && turtleTriplet.Item1.Equals(curve.Invert(hareTriplet.Item1)))
             {
-                //Console.WriteLine($"Negastion map: P1 == -P2");
                 foundWithNegationMap = true;
                 return new Tuple<int, int>(-1, 1);
             }
@@ -149,7 +134,6 @@ namespace WeierstrassCurveTest.DLP
             // Extended negation map
             if (extendedNegationMapEnabled)
             {
-                // TODO: move to the 
                 var pointsOfOrder2 = (curve as WeierstrassCurve).pointsOnAbscissaAxis;
                 Point P_inv = curve.Invert(turtleTriplet.Item1);
 
@@ -158,7 +142,6 @@ namespace WeierstrassCurveTest.DLP
                     Point PY = curve.Add(hareTriplet.Item1, Y);
                     if (turtleTriplet.Item1.Equals(PY))
                     {
-                        //Console.WriteLine($"P1 === P2 + Y0");
                         foundWithExtendedNegationMap = true;
                         return new Tuple<int, int>(1, 2);
                     }
@@ -166,7 +149,6 @@ namespace WeierstrassCurveTest.DLP
                     // -P1 === P2 + Y0
                     if (P_inv.Equals(PY))
                     {
-                        //Console.WriteLine($"-P1 === P2 + Y0");
                         foundWithExtendedNegationMap = true;
                         return new Tuple<int, int>(-1, 2);
                     }
@@ -191,22 +173,11 @@ namespace WeierstrassCurveTest.DLP
 
             BigInteger gcd = BigIntHelper.GCD(N, v, out _, out _);
             BigInteger modulo = N / gcd;
-            //Console.WriteLine($"N: {N}; gcd: {gcd}; modulo: {modulo}");
-            //Console.WriteLine($"vi: {vi}; vj: {vj}; v: {v}; gcd(v, modulo): {BigIntHelper.GCD(v, modulo, out _, out _)}");
 
             if (BigIntHelper.GCD(v, modulo, out _, out _) > 1)
             {
-                //Console.WriteLine($"We found anti-collision! ");
-                //Console.WriteLine($"N: {N}; gcd: {gcd}; modulo: {modulo}");
-                //Console.WriteLine($"vi: {vi}; vj: {vj}; v: {v}; gcd(v, modulo): {BigIntHelper.GCD(v, modulo, out _, out _)}");
                 return 0; // anti-collision, The collision information is not sufficient to solve k uniquely 
             }
-
-            //Console.WriteLine($"modulo: {modulo}");
-            //Console.WriteLine($"u: {u}");
-            //Console.WriteLine($"ModuloHelper.MultInverse(v, modulo): {ModuloHelper.MultInverse(v, modulo)}");
-            //Console.WriteLine($"hareTriplet: {ui} * P + {vi} * Q = {hareTriplet.Item1}");
-            //Console.WriteLine($"turtleTriplet: {uj} * P + {vj} * Q = {turtleTriplet.Item1}");
 
             return ModuloHelper.Abs(u * ModuloHelper.MultInverse(v, modulo), N);
         }
